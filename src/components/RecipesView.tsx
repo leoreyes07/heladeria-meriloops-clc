@@ -8,6 +8,7 @@ import {
   FileCheck2 
 } from 'lucide-react';
 import { IngredientItem, RecipeItem, RecipeIngredient } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface RecipesViewProps {
   ingredients: IngredientItem[];
@@ -23,6 +24,7 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
   onOpenLabelModal,
 }) => {
   const [activeView, setActiveView] = useState<'builder' | 'list'>('builder');
+  const { t, formatCurrency, currency } = useSettings();
 
   // New Recipe Form State
   const [recipeName, setRecipeName] = useState('Pistachio Cloud Bliss');
@@ -117,38 +119,30 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
     };
 
     onSaveRecipe(newRecipe);
-    alert(`Recipe "${recipeName}" saved successfully! Batch Cost: $${totalBatchCost.toFixed(2)}.`);
+    alert(`Recipe "${recipeName}" saved successfully! Batch Cost: ${formatCurrency(totalBatchCost)}.`);
   };
 
   return (
-    <div className="p-6 max-w-[1280px] mx-auto w-full">
+    <div className="view-container">
       {/* Tab Header View Mode */}
-      <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-        <div className="flex gap-4">
+      <div className="view-mode-header">
+        <div className="view-mode-tabs">
           <button
             onClick={() => setActiveView('builder')}
-            className={`px-4 py-2 rounded-xl font-bold text-xs transition-colors ${
-              activeView === 'builder'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'bg-[#161619] border border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
-            }`}
+            className={`view-mode-btn ${activeView === 'builder' ? 'active' : ''}`}
           >
             New Recipe Builder
           </button>
           <button
             onClick={() => setActiveView('list')}
-            className={`px-4 py-2 rounded-xl font-bold text-xs transition-colors ${
-              activeView === 'list'
-                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md'
-                : 'bg-[#161619] border border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
-            }`}
+            className={`view-mode-btn ${activeView === 'list' ? 'active' : ''}`}
           >
             Saved Recipe Catalog ({recipes.length})
           </button>
         </div>
 
         {activeView === 'builder' && (
-          <div className="flex gap-3">
+          <div className="view-mode-actions">
             <button
               onClick={() => {
                 setRecipeName('Pistachio Cloud Bliss');
@@ -158,13 +152,13 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                   { ingredientId: 'ing-6', name: 'Heavy Cream (Grade A)', qty: 2.0, unit: 'L', cost: 9.00 },
                 ]);
               }}
-              className="px-5 py-2.5 border border-white/10 rounded-xl font-bold text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="action-btn-secondary"
             >
               Discard Draft
             </button>
             <button
               onClick={handleSaveDraft}
-              className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold text-xs hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-950/50 active:scale-95"
+              className="action-btn-primary"
             >
               Save Recipe
             </button>
@@ -174,44 +168,44 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
 
       {activeView === 'list' ? (
         /* Saved Recipes Catalog View */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="recipes-grid">
           {recipes.map((rec) => {
             const recipeCost = rec.ingredients.reduce((s, i) => s + i.cost, 0);
             return (
-              <div key={rec.id} className="bg-[#141417] border border-white/5 rounded-3xl p-6 card-shadow hover:-translate-y-1 transition-all">
-                <div className="flex justify-between items-start mb-3">
-                  <span className="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20">
-                    <ChefHat className="w-5 h-5" />
+              <div key={rec.id} className="recipe-card group">
+                <div className="recipe-card-header">
+                  <span className="recipe-card-icon indigo">
+                    <ChefHat className="icon" />
                   </span>
-                  <span className="bg-white/5 border border-white/10 text-slate-300 text-xs font-bold px-2.5 py-1 rounded-full">
+                  <span className="recipe-card-badge">
                     {rec.baseType}
                   </span>
                 </div>
-                <h3 className="font-sans text-xl font-bold text-white mb-1">
+                <h3 className="recipe-card-title">
                   {rec.name}
                 </h3>
-                <p className="text-xs text-slate-400 mb-4">
-                  Batch Size: {rec.batchSizeLiters} Liters • Retail: ${rec.suggestedRetail.toFixed(2)}
+                <p className="recipe-card-subtitle">
+                  Batch Size: {rec.batchSizeLiters} Liters • Retail: {formatCurrency(rec.suggestedRetail)}
                 </p>
 
-                <div className="bg-[#161619] p-3.5 rounded-2xl border border-white/10 mb-4 space-y-1.5 text-xs">
-                  <div className="flex justify-between font-bold text-white">
-                    <span>Total Batch Cost</span>
-                    <span className="text-indigo-400">${recipeCost.toFixed(2)}</span>
+                <div className="recipe-card-stats">
+                  <div className="stat-row">
+                    <span className="stat-label-light">Total Batch Cost</span>
+                    <span className="stat-value-indigo">{formatCurrency(recipeCost)}</span>
                   </div>
-                  <div className="flex justify-between text-slate-400">
+                  <div className="stat-row text-muted">
                     <span>Cost per 100ml</span>
-                    <span>${(recipeCost / ((rec.batchSizeLiters || 1) * 10)).toFixed(2)}</span>
+                    <span>{formatCurrency(recipeCost / ((rec.batchSizeLiters || 1) * 10))}</span>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="recipe-card-actions">
                   <button
                     onClick={() => onOpenLabelModal(rec)}
-                    className="flex-1 py-2.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 font-bold text-xs rounded-xl hover:bg-indigo-500/20 transition-all flex items-center justify-center gap-1.5"
+                    className="generate-label-btn"
                   >
-                    <FileCheck2 className="w-4 h-4" />
-                    <span>Generate Label</span>
+                    <FileCheck2 className="icon-sm" />
+                    <span>{t('recipes.generateLabel')}</span>
                   </button>
                 </div>
               </div>
@@ -220,17 +214,17 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
         </div>
       ) : (
         /* Recipe Builder Workspace */
-        <div className="grid grid-cols-12 gap-6">
+        <div className="builder-layout">
           {/* Left Column: Recipe Entry */}
-          <div className="col-span-12 lg:col-span-7 space-y-6">
+          <div className="builder-main">
             {/* Basic Info Card */}
-            <section className="bg-[#141417] p-6 rounded-3xl border border-white/5 card-shadow">
-              <h3 className="font-sans text-xl font-bold text-white mb-4">
+            <section className="builder-section">
+              <h3 className="section-title-large">
                 Flavor Identity
               </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="font-bold text-[10px] text-slate-500 block mb-2 uppercase tracking-wider">
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label className="form-label">
                     RECIPE NAME
                   </label>
                   <input
@@ -238,68 +232,68 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                     value={recipeName}
                     onChange={(e) => setRecipeName(e.target.value)}
                     placeholder="Enter flavor name..."
-                    className="w-full px-4 py-2.5 bg-[#161619] border border-white/10 rounded-xl text-white font-sans text-xs focus:border-indigo-500/50 outline-none"
+                    className="form-input"
                   />
                 </div>
-                <div>
-                  <label className="font-bold text-[10px] text-slate-500 block mb-2 uppercase tracking-wider">
+                <div className="form-group">
+                  <label className="form-label">
                     BATCH SIZE (LITERS)
                   </label>
                   <input
                     type="number"
                     value={batchSize}
                     onChange={(e) => setBatchSize(parseFloat(e.target.value) || 1)}
-                    className="w-full px-4 py-2.5 bg-[#161619] border border-white/10 rounded-xl text-white font-sans text-xs focus:border-indigo-500/50 outline-none"
+                    className="form-input"
                   />
                 </div>
-                <div>
-                  <label className="font-bold text-[10px] text-slate-500 block mb-2 uppercase tracking-wider">
+                <div className="form-group">
+                  <label className="form-label">
                     BASE TYPE
                   </label>
                   <select
                     value={baseType}
                     onChange={(e) => setBaseType(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-[#161619] border border-white/10 rounded-xl text-white font-sans text-xs focus:border-indigo-500/50 outline-none"
+                    className="form-select"
                   >
-                    <option value="Premium Cream" className="bg-[#141417]">Premium Cream</option>
-                    <option value="Vegan Oat" className="bg-[#141417]">Vegan Oat</option>
-                    <option value="Fruit Sorbet" className="bg-[#141417]">Fruit Sorbet</option>
+                    <option value="Premium Cream">Premium Cream</option>
+                    <option value="Vegan Oat">Vegan Oat</option>
+                    <option value="Fruit Sorbet">Fruit Sorbet</option>
                   </select>
                 </div>
               </div>
             </section>
 
             {/* Ingredients Base Selection Card */}
-            <section className="bg-[#141417] p-6 rounded-3xl border border-white/5 card-shadow">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-sans text-xl font-bold text-white">
+            <section className="builder-section">
+              <div className="builder-section-header">
+                <h3 className="section-title-large">
                   Ingredients Base
                 </h3>
                 <button
                   onClick={handleAddRow}
-                  className="flex items-center gap-1.5 text-indigo-400 font-bold text-xs hover:underline uppercase tracking-wider"
+                  className="add-ingredient-btn"
                 >
-                  <PlusCircle className="w-4 h-4" /> ADD INGREDIENT
+                  <PlusCircle className="icon-sm" /> ADD INGREDIENT
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="ingredients-list">
                 {/* Water (Primary/Default) */}
-                <div className="grid grid-cols-12 gap-4 items-center bg-[#161619] p-3.5 rounded-2xl border border-dashed border-white/10">
-                  <div className="col-span-6">
-                    <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                <div className="ingredient-row locked">
+                  <div className="ingredient-col-main">
+                    <label className="form-label">
                       INGREDIENT
                     </label>
-                    <div className="flex items-center gap-2.5">
-                      <Droplets className="w-4 h-4 text-indigo-400" />
-                      <span className="font-semibold text-xs text-white">Water (Primary)</span>
-                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    <div className="ingredient-name-locked">
+                      <Droplets className="icon-sm indigo" />
+                      <span className="text-white">Water (Primary)</span>
+                      <span className="status-badge emerald">
                         FREE
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-4">
-                    <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                  <div className="ingredient-col-qty">
+                    <label className="form-label">
                       QUANTITY (L)
                     </label>
                     <input
@@ -307,39 +301,39 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                       step="0.1"
                       value={waterQty}
                       onChange={(e) => setWaterQty(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-1.5 bg-[#141417] border border-white/10 rounded-lg text-xs text-white outline-none focus:border-indigo-500/50"
+                      className="form-input"
                     />
                   </div>
-                  <div className="col-span-2 text-right">
-                    <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                  <div className="ingredient-col-cost">
+                    <label className="form-label">
                       COST
                     </label>
-                    <span className="text-xs font-data-tabular font-semibold text-white">$0.00</span>
+                    <span className="cost-value">{formatCurrency(0)}</span>
                   </div>
                 </div>
 
                 {/* Custom Ingredient Rows */}
                 {selectedIngredients.map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-4 items-center p-3.5 rounded-2xl border border-white/10 bg-[#161619] group hover:border-indigo-500/40 transition-colors">
-                    <div className="col-span-6">
-                      <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                  <div key={index} className="ingredient-row">
+                    <div className="ingredient-col-main">
+                      <label className="form-label">
                         INGREDIENT
                       </label>
                       <select
                         value={item.ingredientId}
                         onChange={(e) => handleIngredientChange(index, 'ingredientId', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-[#141417] border border-white/10 rounded-lg text-xs text-white outline-none focus:border-indigo-500/50"
+                        className="form-select"
                       >
                         {ingredients.map((ing) => (
-                          <option key={ing.id} value={ing.id} className="bg-[#141417]">
-                            {ing.name} (${ing.unitCost.toFixed(2)}/{ing.unit.toLowerCase().includes('liter') ? 'L' : ing.unit})
+                          <option key={ing.id} value={ing.id}>
+                            {ing.name} ({formatCurrency(ing.unitCost)}/{ing.unit.toLowerCase().includes('liter') ? 'L' : ing.unit})
                           </option>
                         ))}
                       </select>
                     </div>
 
-                    <div className="col-span-4">
-                      <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                    <div className="ingredient-col-qty">
+                      <label className="form-label">
                         QTY ({item.unit.toUpperCase()})
                       </label>
                       <input
@@ -347,25 +341,25 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                         step="0.1"
                         value={item.qty}
                         onChange={(e) => handleIngredientChange(index, 'qty', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-[#141417] border border-white/10 rounded-lg text-xs text-white outline-none focus:border-indigo-500/50 font-data-tabular"
+                        className="form-input font-data-tabular"
                       />
                     </div>
 
-                    <div className="col-span-2 flex items-center justify-between">
-                      <div className="text-right flex-1">
-                        <label className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                    <div className="ingredient-col-cost flex-between">
+                      <div className="text-right">
+                        <label className="form-label">
                           COST
                         </label>
-                        <span className="text-xs font-data-tabular font-bold text-white">
-                          ${item.cost.toFixed(2)}
+                        <span className="cost-value">
+                          {formatCurrency(item.cost)}
                         </span>
                       </div>
                       <button
                         onClick={() => handleRemoveRow(index)}
-                        className="text-rose-400 opacity-70 group-hover:opacity-100 hover:scale-110 transition-all ml-2 p-1"
+                        className="delete-row-btn"
                         title="Delete row"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="icon-sm" />
                       </button>
                     </div>
                   </div>
@@ -375,102 +369,102 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
           </div>
 
           {/* Right Column: Real-time Summary */}
-          <div className="col-span-12 lg:col-span-5 space-y-6">
-            <section className="bg-[#141417] p-6 rounded-3xl border border-white/5 card-shadow sticky top-20">
-              <h3 className="font-sans text-xl font-bold text-white mb-6">
+          <div className="builder-sidebar">
+            <section className="builder-section sticky-panel">
+              <h3 className="section-title-large">
                 Live Summary
               </h3>
 
-              <div className="space-y-6">
+              <div className="summary-stack">
                 {/* Big Metric: Total Batch Cost */}
-                <div className="text-center p-4 bg-[#161619] rounded-2xl border border-white/10">
-                  <span className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                <div className="summary-hero-metric">
+                  <span className="form-label">
                     TOTAL BATCH COST
                   </span>
-                  <span className="font-sans text-4xl font-light text-indigo-400">
-                    ${totalBatchCost.toFixed(2)}
+                  <span className="hero-value indigo">
+                    {formatCurrency(totalBatchCost)}
                   </span>
                 </div>
 
                 {/* Serving Cost & Suggested Retail */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3.5 border border-white/10 rounded-2xl text-center bg-[#161619]">
-                    <span className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                <div className="summary-grid">
+                  <div className="summary-box">
+                    <span className="form-label">
                       PER SERVING (100ml)
                     </span>
-                    <span className="font-sans text-xl font-bold text-white">
-                      ${costPerServing.toFixed(2)}
+                    <span className="box-value">
+                      {formatCurrency(costPerServing)}
                     </span>
                   </div>
-                  <div className="p-3.5 border border-white/10 rounded-2xl text-center bg-[#161619]">
-                    <span className="font-bold text-[10px] text-slate-500 block mb-1 uppercase tracking-wider">
+                  <div className="summary-box">
+                    <span className="form-label">
                       SUGGESTED RETAIL
                     </span>
-                    <div className="flex justify-center items-center gap-1">
-                      <span className="text-xs text-slate-500">$</span>
+                    <div className="input-with-symbol">
+                      <span className="symbol">{currency === 'NIO' ? 'C$' : '$'}</span>
                       <input
                         type="number"
                         step="0.25"
                         value={suggestedRetail}
                         onChange={(e) => setSuggestedRetail(parseFloat(e.target.value) || 4.50)}
-                        className="w-16 font-sans text-xl font-bold text-white text-center border-b border-indigo-500 bg-transparent outline-none"
+                        className="inline-input"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Margin Health Bar */}
-                <div className="pt-2">
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="font-bold text-[10px] text-slate-400 uppercase tracking-wider">
+                <div className="margin-health-section">
+                  <div className="margin-health-header">
+                    <span className="form-label">
                       MARGIN HEALTH
                     </span>
-                    <span className="font-bold text-xs text-emerald-400">
+                    <span className="health-value">
                       {marginHealth.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                  <div className="metric-progress-bar">
                     <div
-                      className="h-full bg-emerald-400 rounded-full transition-all duration-300 shadow-sm"
+                      className="metric-progress-fill health"
                       style={{ width: `${Math.min(100, Math.max(0, marginHealth))}%` }}
                     />
                   </div>
                 </div>
 
                 {/* Detailed Breakdown List */}
-                <div className="border-t border-white/5 pt-4">
-                  <h4 className="font-bold text-[10px] text-slate-500 mb-3 uppercase tracking-wider">
+                <div className="cost-breakdown">
+                  <h4 className="form-label">
                     COST DISTRIBUTION
                   </h4>
-                  <div className="space-y-2.5">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-400 flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" /> Dairy Base
+                  <div className="breakdown-list">
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">
+                        <span className="dot indigo" /> Dairy Base
                       </span>
-                      <span className="font-data-tabular font-bold text-white">${dairyCost.toFixed(2)}</span>
+                      <span className="breakdown-val">{formatCurrency(dairyCost)}</span>
                     </div>
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-400 flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Flavor Inclusions
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">
+                        <span className="dot purple" /> Flavor Inclusions
                       </span>
-                      <span className="font-data-tabular font-bold text-white">${inclusionsCost.toFixed(2)}</span>
+                      <span className="breakdown-val">{formatCurrency(inclusionsCost)}</span>
                     </div>
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-400 flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-slate-600" /> Emulsifiers & Water
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">
+                        <span className="dot gray" /> Emulsifiers & Water
                       </span>
-                      <span className="font-data-tabular font-bold text-slate-500">$0.00</span>
+                      <span className="breakdown-val text-muted">{formatCurrency(0)}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Profit Badge */}
-                <div className="flex items-center justify-between p-3.5 bg-emerald-500/10 rounded-2xl px-5 border border-emerald-500/20">
-                  <span className="font-bold text-[10px] text-emerald-400 uppercase tracking-wider">
+                <div className="profit-badge">
+                  <span className="form-label emerald">
                     ESTIMATED PROFIT PER BATCH
                   </span>
-                  <span className="font-sans text-2xl font-bold text-emerald-400">
-                    ${estimatedProfitPerBatch.toFixed(2)}
+                  <span className="profit-val">
+                    {formatCurrency(estimatedProfitPerBatch)}
                   </span>
                 </div>
 
@@ -491,7 +485,7 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                     };
                     onOpenLabelModal(currentRecipe);
                   }}
-                  className="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl font-bold text-xs hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-950/50 active:scale-[0.98]"
+                  className="action-btn-primary full-width large"
                 >
                   Confirm & Generate Label
                 </button>
@@ -499,16 +493,16 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
             </section>
 
             {/* Price Alert Banner */}
-            <div className="bg-[#141417] p-4 rounded-2xl border border-white/5 card-shadow flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center shrink-0">
-                <TrendingUp className="w-5 h-5 text-rose-400" />
+            <div className="alert-banner">
+              <div className="alert-banner-icon-wrapper">
+                <TrendingUp className="icon-md" />
               </div>
-              <div>
-                <p className="font-bold text-[10px] text-slate-500 uppercase tracking-wider">
+              <div className="alert-banner-content">
+                <p className="form-label">
                   Price Alert
                 </p>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Sicilian Pistachio cost has <span className="text-rose-400 font-bold">increased by 8%</span> this month.
+                <p className="alert-banner-desc">
+                  Sicilian Pistachio cost has <span className="highlight rose">increased by 8%</span> this month.
                 </p>
               </div>
             </div>

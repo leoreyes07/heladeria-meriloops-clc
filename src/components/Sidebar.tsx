@@ -1,58 +1,54 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Package, 
-  BookOpen, 
-  CreditCard, 
-  BarChart3, 
-  Plus, 
-  Settings, 
-  HelpCircle 
-} from 'lucide-react';
+import { HelpCircle, Settings, Plus, BarChart3, CreditCard, BookOpen, Package, LayoutDashboard } from 'lucide-react';
 import { NavigationTab } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface SidebarProps {
   activeTab: NavigationTab;
   setActiveTab: (tab: NavigationTab) => void;
   onOpenNewRecipeModal: () => void;
+  onOpenSettingsModal: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
   onOpenNewRecipeModal,
+  onOpenSettingsModal
 }) => {
+  const { t } = useSettings();
+
   const navItems = [
-    { id: 'dashboard' as NavigationTab, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'ingredients' as NavigationTab, label: 'Ingredients', icon: Package },
-    { id: 'recipes' as NavigationTab, label: 'Recipes', icon: BookOpen },
-    { id: 'pricing' as NavigationTab, label: 'Pricing', icon: CreditCard },
-    { id: 'reports' as NavigationTab, label: 'Reports', icon: BarChart3 },
+    { id: 'dashboard' as NavigationTab, label: t('sidebar.dashboard'), icon: LayoutDashboard },
+    { id: 'ingredients' as NavigationTab, label: t('sidebar.ingredients'), icon: Package },
+    { id: 'recipes' as NavigationTab, label: t('sidebar.recipes'), icon: BookOpen },
+    { id: 'pricing' as NavigationTab, label: t('sidebar.pricing'), icon: CreditCard },
+    { id: 'reports' as NavigationTab, label: t('sidebar.reports'), icon: BarChart3 },
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-[240px] bg-[#0D0D0F] border-r border-white/5 flex flex-col py-6 z-50 select-none">
+    <aside className="sidebar">
       {/* Brand Header */}
-      <div className="px-6 mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+      <div className="sidebar-brand-header">
+        <div className="sidebar-brand-logo-container">
+          <div className="sidebar-brand-logo">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
           </div>
           <div>
-            <h1 className="font-sans text-base font-bold text-white tracking-tight leading-none">
-              SCOOP LEDGER
+            <h1 className="sidebar-brand-title">
+              {t('sidebar.brandTitle')}
             </h1>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-0.5">
-              OPERATIONAL MANAGER
+            <p className="sidebar-brand-subtitle">
+              {t('sidebar.brandSubtitle')}
             </p>
           </div>
         </div>
       </div>
 
       {/* Primary Navigation */}
-      <nav className="flex-1 px-3 space-y-1">
-        <div className="text-[10px] uppercase tracking-widest text-slate-500 font-bold px-3 mb-2">
-          Core Systems
+      <nav className="sidebar-nav">
+        <div className="sidebar-nav-title">
+          {t('sidebar.coreSystems')}
         </div>
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -61,13 +57,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all font-medium text-sm ${
-                isActive
-                  ? 'bg-white/10 text-white border-l-2 border-indigo-500 shadow-sm'
-                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
-              }`}
+              className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
+              <Icon className={`sidebar-nav-icon ${isActive ? 'active' : ''}`} />
               <span>{item.label}</span>
             </button>
           );
@@ -75,33 +67,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Bottom Actions */}
-      <div className="mt-auto px-3 pt-4 space-y-1 border-t border-white/5">
+      <div className="sidebar-bottom-actions">
         <button
           onClick={() => {
             setActiveTab('recipes');
             onOpenNewRecipeModal();
           }}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2.5 rounded-xl font-bold hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition-all shadow-md shadow-indigo-950/50 text-xs mb-3"
+          className="sidebar-new-recipe-btn"
         >
-          <Plus className="w-4 h-4" />
-          <span>New Recipe</span>
+          <Plus className="sidebar-icon" />
+          <span>{t('sidebar.newRecipe')}</span>
         </button>
 
         <a
           href="#settings"
-          onClick={(e) => { e.preventDefault(); alert('Scoop Ledger Settings: System preferences & unit defaults saved.'); }}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-xs font-medium"
+          onClick={(e) => { e.preventDefault(); onOpenSettingsModal(); }}
+          className="sidebar-bottom-link"
         >
-          <Settings className="w-4 h-4 text-slate-500" />
-          <span>Settings</span>
+          <Settings className="sidebar-icon" />
+          <span>{t('sidebar.settings')}</span>
         </a>
         <a
           href="#support"
-          onClick={(e) => { e.preventDefault(); alert('Scoop Ledger Support: Operational documentation & help guide.'); }}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors text-xs font-medium"
+          onClick={(e) => { e.preventDefault(); }}
+          className="sidebar-bottom-link"
         >
-          <HelpCircle className="w-4 h-4 text-slate-500" />
-          <span>Support</span>
+          <HelpCircle className="sidebar-icon" />
+          <span>{t('sidebar.support')}</span>
         </a>
       </div>
     </aside>

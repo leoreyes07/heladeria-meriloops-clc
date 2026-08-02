@@ -10,6 +10,7 @@ import { ReportsView } from './components/ReportsView';
 import { AddIngredientModal } from './components/AddIngredientModal';
 import { RecipeLabelModal } from './components/RecipeLabelModal';
 import { OrdersModal } from './components/OrdersModal';
+import { SettingsModal } from './components/SettingsModal';
 
 import { 
   INITIAL_INGREDIENTS, 
@@ -28,11 +29,13 @@ import {
   AIAdvisoryAlert, 
   OrderItem 
 } from './types';
+import { useSettings } from './contexts/SettingsContext';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [activeSubTab, setActiveSubTab] = useState<SubTab>('inventory');
   const [searchQuery, setSearchQuery] = useState('');
+  const { t, formatCurrency } = useSettings();
 
   // Data Collections State
   const [ingredients, setIngredients] = useState<IngredientItem[]>(INITIAL_INGREDIENTS);
@@ -49,6 +52,7 @@ export default function App() {
   const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
   const [selectedRecipeForLabel, setSelectedRecipeForLabel] = useState<RecipeItem | null>(null);
   const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   // Trigger toast helper
   const showToast = (msg: string) => {
@@ -69,7 +73,7 @@ export default function App() {
   // Add new ingredient
   const handleAddIngredient = (newIng: IngredientItem) => {
     setIngredients((prev) => [newIng, ...prev]);
-    showToast(`Added ingredient: "${newIng.name}" ($${newIng.unitCost.toFixed(2)}/${newIng.unit})`);
+    showToast(`Added ingredient: "${newIng.name}" (${formatCurrency(newIng.unitCost)}/${newIng.unit})`);
   };
 
   // Delete ingredient
@@ -115,7 +119,7 @@ export default function App() {
       )
     );
     setAdvisory((prev) => ({ ...prev, status: 'dismissed' }));
-    showToast('Applied Natura Bulk Cocoa supplier rates to Double Dark Cocoa ($0.45/scoop saved).');
+    showToast(`Applied Natura Bulk Cocoa supplier rates to Double Dark Cocoa (${formatCurrency(0.45)}/scoop saved).`);
   };
 
   const handleDismissAdvisory = () => {
@@ -139,7 +143,7 @@ export default function App() {
   const pendingSyncCount = flavors.filter((f) => f.syncStatus === 'Local').length;
 
   return (
-    <div className="min-h-screen bg-[#f8fafb] text-[#161d1f] font-sans flex flex-col selection:bg-[#a8e6cf] selection:text-[#2c6957]">
+    <div className="app-container">
       {/* Sidebar Navigation */}
       <Sidebar
         activeTab={activeTab}
@@ -147,31 +151,33 @@ export default function App() {
         onOpenNewRecipeModal={() => {
           setActiveTab('recipes');
         }}
+        onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
       />
 
-      {/* Top Header Navigation */}
-      <TopBar
-        activeTab={activeTab}
-        activeSubTab={activeSubTab}
-        setActiveSubTab={handleSetSubTab}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onSyncData={handleSyncData}
-        isSyncing={isSyncing}
-        pendingSyncCount={pendingSyncCount}
-      />
+      <div className="main-content">
+        {/* Top Header Navigation */}
+        <TopBar
+          activeTab={activeTab}
+          activeSubTab={activeSubTab}
+          setActiveSubTab={handleSetSubTab}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSyncData={handleSyncData}
+          isSyncing={isSyncing}
+          pendingSyncCount={pendingSyncCount}
+        />
 
-      {/* Toast Notification Banner */}
-      {toastMessage && (
-        <div className="fixed top-20 right-6 z-[120] bg-[#161d1f] text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-in slide-in-from-top-2 duration-200 text-xs font-medium border border-white/10">
-          <span className="w-2 h-2 rounded-full bg-[#a8e6cf] animate-ping" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
+        {/* Toast Notification Banner */}
+        {toastMessage && (
+          <div className="toast-notification">
+            <span className="toast-indicator" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
 
-      {/* Main View Area (Offset by 240px sidebar and 64px header) */}
-      <main className="ml-[240px] pt-16 flex-1 pb-16">
-        {activeTab === 'dashboard' && (
+        {/* Main View Area */}
+        <main className="flex-1 w-full relative">
+          {activeTab === 'dashboard' && (
           <DashboardView
             ingredients={ingredients}
             onNavigateTab={(tab) => setActiveTab(tab)}
@@ -212,7 +218,8 @@ export default function App() {
             onDismissAdvisory={handleDismissAdvisory}
           />
         )}
-      </main>
+        </main>
+      </div>
 
       {/* Modals & Dialogs */}
       <AddIngredientModal
@@ -235,6 +242,11 @@ export default function App() {
         orders={orders}
         onAddOrder={handleAddOrder}
         onUpdateOrderStatus={handleUpdateOrderStatus}
+      />
+
+      <SettingsModal 
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
       />
     </div>
   );

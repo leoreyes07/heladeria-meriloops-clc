@@ -13,6 +13,7 @@ import {
   IceCream
 } from 'lucide-react';
 import { IngredientItem } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface DashboardViewProps {
   ingredients: IngredientItem[];
@@ -28,6 +29,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenOrders,
 }) => {
   const [selectedPeriod, setSelectedPeriod] = useState('This Month');
+  const { t, formatCurrency } = useSettings();
 
   // Chart data for Profit vs Loss Summary
   const daysData = [
@@ -42,11 +44,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const handleExportDashboardReport = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
-      + "Metric,Value,Note\n"
-      + "Total Monthly Cost,$12450.80,+4.2% YoY\n"
-      + "Current Profit Margin,64.2%,Healthy\n"
-      + "Top Selling Product,Sea Salt Caramel,$5.20 margin/scoop\n"
-      + "Total Active SKUs," + ingredients.length + ",Active Inventory\n";
+      + `Metric,Value,Note\n`
+      + `${t('dashboard.totalCost')},${formatCurrency(12450.80)},+4.2% YoY\n`
+      + `${t('dashboard.profitMargin')},64.2%,${t('dashboard.healthy')}\n`
+      + `${t('dashboard.topSelling')},Sea Salt Caramel,${formatCurrency(5.20)} margin/scoop\n`
+      + `Total Active SKUs,${ingredients.length},Active Inventory\n`;
     
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -58,57 +60,57 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   return (
-    <div className="p-6 max-w-[1280px] mx-auto w-full">
+    <div className="dashboard-container">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+      <div className="dashboard-header">
         <div>
-          <h2 className="font-sans text-3xl font-light text-white tracking-tight italic">
-            Dashboard <span className="font-semibold text-indigo-400 not-italic">Overview</span>
+          <h2 className="dashboard-title">
+            {t('dashboard.title')}
           </h2>
-          <p className="text-slate-400 text-sm mt-1 font-sans">
-            Real-time profitability tracking for August 2026
+          <p className="dashboard-subtitle">
+            {t('dashboard.subtitle')}
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="dashboard-header-actions">
           <button 
             onClick={() => setSelectedPeriod(selectedPeriod === 'This Month' ? 'Last Month' : 'This Month')}
-            className="bg-[#161619] border border-white/10 px-4 py-2 rounded-xl font-bold text-xs text-slate-300 hover:bg-white/5 transition-all flex items-center gap-2 shadow-lg"
+            className="dashboard-btn"
           >
-            <Calendar className="w-4 h-4 text-slate-400" />
+            <Calendar className="dashboard-icon" />
             <span>{selectedPeriod}</span>
           </button>
           <button 
             onClick={handleExportDashboardReport}
-            className="bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-4 py-2 rounded-xl font-bold text-xs hover:bg-indigo-500/20 transition-all flex items-center gap-2 shadow-lg active:scale-95"
+            className="dashboard-btn primary"
           >
-            <Download className="w-4 h-4 text-indigo-400" />
-            <span>Export Report</span>
+            <Download className="dashboard-icon" />
+            <span>{t('reports.exportReportBtn')}</span>
           </button>
         </div>
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-12 gap-6 mb-8">
+      <div className="dashboard-grid top-metrics">
         {/* Metric Card 1 */}
         <div 
           onClick={() => onNavigateTab('ingredients')}
-          className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-2xl card-shadow hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden group"
+          className="dashboard-card clickable group"
         >
-          <div className="flex justify-between items-start mb-4">
-            <span className="p-2.5 bg-rose-500/10 rounded-xl text-rose-400 border border-rose-500/20">
-              <DollarSign className="w-5 h-5" />
+          <div className="dashboard-card-header">
+            <span className="metric-icon-wrapper rose">
+              <DollarSign className="metric-icon" />
             </span>
-            <span className="bg-rose-500/10 text-rose-400 text-xs font-bold px-3 py-1 rounded-full border border-rose-500/20">
+            <span className="metric-badge rose">
               +4.2%
             </span>
           </div>
-          <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-1">
-            Total Monthly Cost
+          <p className="metric-label">
+            {t('dashboard.totalCost')}
           </p>
-          <h3 className="font-sans text-3xl font-light text-white">
-            $12,450.80
+          <h3 className="metric-value">
+            {formatCurrency(12450.80)}
           </h3>
-          <p className="text-slate-400 text-xs mt-2 font-sans">
+          <p className="metric-subtext">
             Primary driver: Madagascar Vanilla import price
           </p>
         </div>
@@ -116,97 +118,97 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Metric Card 2 */}
         <div 
           onClick={() => onNavigateTab('reports')}
-          className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-2xl card-shadow hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden group"
+          className="dashboard-card clickable group"
         >
-          <div className="flex justify-between items-start mb-4">
-            <span className="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
-              <TrendingUp className="w-5 h-5" />
+          <div className="dashboard-card-header">
+            <span className="metric-icon-wrapper emerald">
+              <TrendingUp className="metric-icon" />
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20">
-              Healthy
+            <span className="metric-badge emerald">
+              {t('dashboard.healthy')}
             </span>
           </div>
-          <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-1">
-            Current Profit Margin
+          <p className="metric-label">
+            {t('dashboard.profitMargin')}
           </p>
-          <h3 className="font-sans text-3xl font-light text-white">
+          <h3 className="metric-value">
             64.2%
           </h3>
-          <div className="w-full bg-white/5 h-1.5 rounded-full mt-4 overflow-hidden border border-white/5">
-            <div className="bg-emerald-400 h-full w-[64.2%] rounded-full shadow-sm" />
+          <div className="metric-progress-bar">
+            <div className="metric-progress-fill" style={{ width: '64.2%' }} />
           </div>
         </div>
 
         {/* Metric Card 3 */}
         <div 
           onClick={() => onNavigateTab('pricing')}
-          className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-2xl card-shadow hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden group bg-gradient-to-br from-indigo-900/10 to-transparent"
+          className="dashboard-card clickable group highlight-bg"
         >
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <span className="p-2.5 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20">
-              <Star className="w-5 h-5 fill-current" />
+          <div className="dashboard-card-header relative z-10">
+            <span className="metric-icon-wrapper indigo">
+              <Star className="metric-icon fill-current" />
             </span>
-            <span className="text-indigo-400 text-xs font-bold uppercase tracking-wider">
+            <span className="metric-badge outline-indigo">
               High Demand
             </span>
           </div>
           <div className="relative z-10">
-            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-1">
-              Top Selling Product
+            <p className="metric-label">
+              {t('dashboard.topSelling')}
             </p>
-            <h3 className="font-sans text-2xl font-light text-white truncate">
+            <h3 className="metric-value truncate">
               Sea Salt Caramel
             </h3>
-            <p className="text-indigo-300/80 text-xs mt-2 font-sans">
-              $5.20 margin per scoop
+            <p className="metric-subtext highlight">
+              {formatCurrency(5.20)} margin per scoop
             </p>
           </div>
-          <div className="absolute -right-4 -bottom-4 opacity-10 pointer-events-none">
-            <IceCream className="w-32 h-32 text-indigo-400" />
+          <div className="card-bg-icon">
+            <IceCream />
           </div>
         </div>
       </div>
 
       {/* Main Grid: Chart & Actions */}
-      <div className="grid grid-cols-12 gap-6 mb-8">
+      <div className="dashboard-grid main-content-grid">
         {/* Profit vs Loss Summary Chart */}
-        <div className="col-span-12 lg:col-span-8 bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-sans text-sm font-bold text-white uppercase tracking-wider">
-              Profit vs Loss Summary
+        <div className="dashboard-chart-card">
+          <div className="chart-header">
+            <h3 className="section-title">
+              {t('dashboard.profitVsLoss')}
             </h3>
-            <div className="flex gap-4 text-xs font-medium">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-indigo-500 rounded-full" />
-                <span className="text-slate-400">Profit</span>
+            <div className="chart-legend">
+              <div className="legend-item">
+                <span className="legend-dot indigo" />
+                <span>{t('dashboard.profit')}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-purple-500 rounded-full" />
-                <span className="text-slate-400">Loss / COGS</span>
+              <div className="legend-item">
+                <span className="legend-dot purple" />
+                <span>{t('dashboard.loss')}</span>
               </div>
             </div>
           </div>
 
-          <div className="h-[260px] flex items-end justify-between gap-3 px-2 pt-8 border-b border-white/5">
+          <div className="chart-area">
             {daysData.map((item, idx) => (
-              <div key={idx} className="flex-1 flex flex-col items-center gap-1 group relative">
-                <div className="absolute -top-10 bg-[#161619] border border-white/10 text-white text-[10px] px-2.5 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none whitespace-nowrap shadow-xl">
-                  Profit: ${item.profit}k | Loss: ${item.loss}k
+              <div key={idx} className="chart-col group relative">
+                <div className="chart-tooltip">
+                  {t('dashboard.profit')}: {formatCurrency(item.profit * 1000)} | {t('dashboard.loss')}: {formatCurrency(item.loss * 1000)}
                 </div>
 
-                <div className="w-full flex justify-center items-end gap-1.5 h-full">
+                <div className="chart-bars">
                   {/* Profit bar */}
                   <div
                     style={{ height: `${(item.profit / 16) * 100}%` }}
-                    className="w-1/2 bg-indigo-500/80 rounded-t-lg group-hover:bg-indigo-400 transition-all"
+                    className="bar profit-bar"
                   />
                   {/* Loss bar */}
                   <div
                     style={{ height: `${(item.loss / 16) * 100}%` }}
-                    className="w-1/2 bg-purple-500/40 rounded-t-lg group-hover:bg-purple-500/70 transition-all"
+                    className="bar loss-bar"
                   />
                 </div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase mt-3">
+                <span className="chart-label">
                   {item.day}
                 </span>
               </div>
@@ -215,75 +217,75 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Quick Actions & Critical Alerts */}
-        <div className="col-span-12 lg:col-span-4 space-y-6">
+        <div className="dashboard-side-grid">
           {/* Quick Actions */}
-          <div className="bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow">
-            <h3 className="font-sans text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
-              Quick Actions
+          <div className="dashboard-card">
+            <h3 className="section-title mb-4">
+              {t('dashboard.quickActions')}
             </h3>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="action-buttons-list">
               <button
                 onClick={onOpenAddIngredientModal}
-                className="flex items-center gap-4 bg-[#161619] p-3.5 rounded-2xl border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
+                className="action-btn group"
               >
-                <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                  <PlusCircle className="w-5 h-5" />
+                <div className="action-btn-icon-wrapper">
+                  <PlusCircle className="action-icon" />
                 </div>
-                <div>
-                  <p className="font-bold text-xs text-white">Add New Ingredient</p>
-                  <p className="text-[11px] text-slate-400">Update inventory costs</p>
+                <div className="action-btn-content">
+                  <p className="action-btn-title">{t('dashboard.addIngredientTitle')}</p>
+                  <p className="action-btn-desc">{t('dashboard.addIngredientDesc')}</p>
                 </div>
               </button>
 
               <button
                 onClick={() => onNavigateTab('pricing')}
-                className="flex items-center gap-4 bg-[#161619] p-3.5 rounded-2xl border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
+                className="action-btn group"
               >
-                <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                  <Calculator className="w-5 h-5" />
+                <div className="action-btn-icon-wrapper">
+                  <Calculator className="action-icon" />
                 </div>
-                <div>
-                  <p className="font-bold text-xs text-white">Check Recipe Cost</p>
-                  <p className="text-[11px] text-slate-400">Calculate scoop margin</p>
+                <div className="action-btn-content">
+                  <p className="action-btn-title">{t('dashboard.checkRecipeTitle')}</p>
+                  <p className="action-btn-desc">{t('dashboard.checkRecipeDesc')}</p>
                 </div>
               </button>
 
               <button
                 onClick={onOpenOrders}
-                className="flex items-center gap-4 bg-[#161619] p-3.5 rounded-2xl border border-white/10 hover:border-indigo-500/40 hover:bg-white/5 transition-all text-left group"
+                className="action-btn group"
               >
-                <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                  <FileText className="w-5 h-5" />
+                <div className="action-btn-icon-wrapper">
+                  <FileText className="action-icon" />
                 </div>
-                <div>
-                  <p className="font-bold text-xs text-white">Review Wholesale Orders</p>
-                  <p className="text-[11px] text-slate-400">Recent wholesale batches</p>
+                <div className="action-btn-content">
+                  <p className="action-btn-title">{t('dashboard.reviewOrdersTitle')}</p>
+                  <p className="action-btn-desc">{t('dashboard.reviewOrdersDesc')}</p>
                 </div>
               </button>
             </div>
           </div>
 
           {/* Critical Alerts */}
-          <div className="bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-xs uppercase text-slate-500 tracking-wider">
-                Critical Alerts
+          <div className="dashboard-card">
+            <div className="alert-header">
+              <h3 className="section-title m-0">
+                {t('dashboard.criticalAlerts')}
               </h3>
-              <span className="w-2 h-2 bg-rose-500 rounded-full animate-pulse" />
+              <span className="alert-pulse-dot" />
             </div>
-            <ul className="space-y-3">
-              <li className="flex gap-3 items-start p-3 rounded-2xl bg-rose-500/5 border border-rose-500/20">
-                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-bold text-white">Milk cost increased by 15%</p>
-                  <p className="text-[10px] text-rose-300">Suggest recipe optimization</p>
+            <ul className="alert-list">
+              <li className="alert-item critical">
+                <AlertTriangle className="alert-icon" />
+                <div className="alert-content">
+                  <p className="alert-title">Milk cost increased by 15%</p>
+                  <p className="alert-desc">Suggest recipe optimization</p>
                 </div>
               </li>
-              <li className="flex gap-3 items-start p-3 rounded-2xl bg-white/5 border border-white/10">
-                <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-bold text-white">Stock low: Heavy Cream</p>
-                  <p className="text-[10px] text-slate-400">Order needed in 2 days</p>
+              <li className="alert-item warning">
+                <Info className="alert-icon" />
+                <div className="alert-content">
+                  <p className="alert-title">Stock low: Heavy Cream</p>
+                  <p className="alert-desc">Order needed in 2 days</p>
                 </div>
               </li>
             </ul>
@@ -292,65 +294,65 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* Recent Activity Table */}
-      <div className="bg-[#141417] border border-white/5 rounded-3xl overflow-hidden card-shadow">
-        <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center">
-          <h3 className="font-sans text-sm font-bold text-white uppercase tracking-wider">
+      <div className="dashboard-table-card">
+        <div className="table-header">
+          <h3 className="section-title m-0">
             Recent Ingredient Adjustments
           </h3>
           <button
             onClick={() => onNavigateTab('ingredients')}
-            className="text-indigo-400 font-bold text-xs hover:underline"
+            className="table-link"
           >
             View All
           </button>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="table-responsive">
+          <table className="data-table">
             <thead>
-              <tr className="bg-[#161619] border-b border-white/5">
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider">Ingredient</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-right">Unit Price</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-right">Change</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-center">Status</th>
+              <tr>
+                <th>{t('ingredients.tableItem')}</th>
+                <th>{t('ingredients.tableCategory')}</th>
+                <th className="text-right">{t('ingredients.tableUnitCost')}</th>
+                <th className="text-right">Change</th>
+                <th className="text-center">{t('ingredients.tableStatus')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-data-tabular text-xs">
-              <tr className="hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4 font-semibold text-white">Tahitian Vanilla Beans</td>
-                <td className="px-6 py-4">
-                  <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-[11px] text-slate-300">Flavorings</span>
+            <tbody>
+              <tr>
+                <td className="font-semibold text-white">Tahitian Vanilla Beans</td>
+                <td>
+                  <span className="tag">Flavorings</span>
                 </td>
-                <td className="px-6 py-4 text-right text-slate-300">$45.00/lb</td>
-                <td className="px-6 py-4 text-right font-bold text-rose-400">+$3.50</td>
-                <td className="px-6 py-4 text-center">
-                  <span className="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase">
+                <td className="text-right text-slate-300">{formatCurrency(45.00)}/lb</td>
+                <td className="text-right font-bold text-rose-400">+{formatCurrency(3.50)}</td>
+                <td className="text-center">
+                  <span className="status-badge rose">
                     Price Spike
                   </span>
                 </td>
               </tr>
-              <tr className="hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4 font-semibold text-white">Cane Sugar (Organic)</td>
-                <td className="px-6 py-4">
-                  <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-[11px] text-slate-300">Bases</span>
+              <tr>
+                <td className="font-semibold text-white">Cane Sugar (Organic)</td>
+                <td>
+                  <span className="tag">Bases</span>
                 </td>
-                <td className="px-6 py-4 text-right text-slate-300">$1.20/lb</td>
-                <td className="px-6 py-4 text-right font-bold text-emerald-400">-$0.10</td>
-                <td className="px-6 py-4 text-center">
-                  <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase">
+                <td className="text-right text-slate-300">{formatCurrency(1.20)}/lb</td>
+                <td className="text-right font-bold text-emerald-400">-{formatCurrency(0.10)}</td>
+                <td className="text-center">
+                  <span className="status-badge emerald">
                     Optimized
                   </span>
                 </td>
               </tr>
-              <tr className="hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4 font-semibold text-white">Pistachio Paste (Bronte)</td>
-                <td className="px-6 py-4">
-                  <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-[11px] text-slate-300">Inclusions</span>
+              <tr>
+                <td className="font-semibold text-white">Pistachio Paste (Bronte)</td>
+                <td>
+                  <span className="tag">Inclusions</span>
                 </td>
-                <td className="px-6 py-4 text-right text-slate-300">$82.00/lb</td>
-                <td className="px-6 py-4 text-right text-slate-500">---</td>
-                <td className="px-6 py-4 text-center">
-                  <span className="bg-white/5 text-slate-400 border border-white/10 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase">
+                <td className="text-right text-slate-300">{formatCurrency(82.00)}/lb</td>
+                <td className="text-right text-slate-500">---</td>
+                <td className="text-center">
+                  <span className="status-badge neutral">
                     Stable
                   </span>
                 </td>

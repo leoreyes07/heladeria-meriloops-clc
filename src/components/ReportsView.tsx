@@ -14,6 +14,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { FlavorProfitability, AIAdvisoryAlert } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface ReportsViewProps {
   flavors: FlavorProfitability[];
@@ -34,6 +35,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 }) => {
   const [filterType, setFilterType] = useState<string>('All');
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const { t, formatCurrency } = useSettings();
 
   const filteredFlavors = flavors.filter((f) => {
     const matchesQuery = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -61,191 +63,191 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   const pendingSyncCount = flavors.filter(f => f.syncStatus === 'Local').length;
 
   return (
-    <div className="p-6 max-w-[1280px] mx-auto w-full">
+    <div className="view-container">
       {/* Summary Bento Grid */}
-      <div className="grid grid-cols-12 gap-6 mb-8">
+      <div className="stats-grid mb-8">
         {/* Net Profit / Average Margin Card */}
-        <div className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow hover:-translate-y-0.5 transition-all">
-          <div className="flex justify-between items-start mb-3">
-            <span className="text-slate-500 font-bold text-[10px] uppercase tracking-wider">
+        <div className="stat-card">
+          <div className="stat-header">
+            <span className="stat-label">
               Average Margin
             </span>
-            <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-              <TrendingUp className="w-5 h-5" />
+            <div className="stat-icon-wrapper emerald">
+              <TrendingUp className="stat-icon" />
             </div>
           </div>
-          <h3 className="font-sans text-3xl font-light text-white mb-1">
+          <h3 className="stat-value">
             68.4%
           </h3>
-          <p className="text-xs text-slate-400">+$2.40 net/scoop average</p>
-          <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-            <div className="h-full bg-emerald-400" style={{ width: '68.4%' }} />
+          <p className="stat-subtext mt-1">+{formatCurrency(2.40)} net/scoop average</p>
+          <div className="metric-progress-bar mt-4">
+            <div className="metric-progress-fill" style={{ width: '68.4%' }} />
           </div>
         </div>
 
         {/* Operating Costs / Ingredient COGS Card */}
-        <div className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow hover:-translate-y-0.5 transition-all">
-          <div className="flex justify-between items-start mb-3">
-            <span className="text-slate-500 font-bold text-[10px] uppercase tracking-wider">
+        <div className="stat-card">
+          <div className="stat-header">
+            <span className="stat-label">
               Ingredient COGS
             </span>
-            <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-              <ShoppingBasket className="w-5 h-5" />
+            <div className="stat-icon-wrapper indigo">
+              <ShoppingBasket className="stat-icon" />
             </div>
           </div>
-          <h3 className="font-sans text-3xl font-light text-white mb-1">
-            $1,248.50
+          <h3 className="stat-value">
+            {formatCurrency(1248.50)}
           </h3>
-          <p className="text-xs text-slate-400">Month-to-date expenditure</p>
-          <div className="mt-4 flex gap-1.5">
-            <div className="h-1 bg-indigo-500 flex-1 rounded-full" />
-            <div className="h-1 bg-indigo-500 flex-1 rounded-full" />
-            <div className="h-1 bg-indigo-500 flex-1 rounded-full" />
-            <div className="h-1 bg-white/10 flex-1 rounded-full" />
+          <p className="stat-subtext mt-1">Month-to-date expenditure</p>
+          <div className="segment-bar mt-4">
+            <div className="segment filled" />
+            <div className="segment filled" />
+            <div className="segment filled" />
+            <div className="segment empty" />
           </div>
         </div>
 
         {/* Best Seller Card */}
-        <div className="col-span-12 md:col-span-4 bg-gradient-to-br from-indigo-900/60 to-purple-900/60 border border-indigo-500/20 text-white p-6 rounded-3xl card-shadow hover:-translate-y-0.5 transition-all overflow-hidden relative">
+        <div className="highlight-card group overflow-hidden relative">
           <div className="relative z-10">
-            <span className="text-indigo-300 font-bold text-[10px] uppercase tracking-wider">
+            <span className="highlight-card-label">
               Top Performer
             </span>
-            <h3 className="font-sans text-2xl font-bold mt-2 mb-1">
+            <h3 className="highlight-card-title mt-2 mb-1">
               Salted Mint Crisp
             </h3>
-            <p className="text-indigo-200/80 text-xs">
+            <p className="highlight-card-subtitle">
               840 scoops sold this week
             </p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="bg-indigo-400 text-slate-950 px-3 py-1 rounded-full text-xs font-bold">
+            <div className="mt-4 flex-row items-center gap-2">
+              <span className="highlight-card-badge">
                 82% Profit
               </span>
-              <span className="text-[11px] text-indigo-200/70">Supabase Synced</span>
+              <span className="highlight-card-subbadge">Supabase Synced</span>
             </div>
           </div>
-          <Gift className="w-28 h-28 absolute -bottom-4 -right-4 opacity-10 rotate-12 text-indigo-300" />
+          <Gift className="highlight-card-icon-bg" />
         </div>
       </div>
 
       {/* Detailed Flavor Profitability Matrix Table */}
-      <div className="bg-[#141417] border border-white/5 rounded-3xl card-shadow overflow-hidden mb-8">
-        <div className="p-6 border-b border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="table-card mb-8">
+        <div className="table-header-alt flex-row-responsive">
           <div>
-            <h2 className="font-sans text-2xl font-light text-white tracking-tight italic">
-              Flavor Profitability <span className="font-semibold text-indigo-400 not-italic">Matrix</span>
+            <h2 className="view-title">
+              {t('reports.title').split(' ')[0]} <span>{t('reports.title').split(' ').slice(1).join(' ')}</span>
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Real-time unit economics per scoop (4oz base)
+            <p className="view-subtitle mt-0.5">
+              {t('reports.subtitle')}
             </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="view-actions">
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-3 py-2 bg-[#161619] border border-white/10 text-white rounded-xl font-bold text-xs outline-none focus:border-indigo-500/50"
+              className="filter-select"
             >
-              <option value="All" className="bg-[#141417]">All Batches</option>
-              <option value="Premium Batch" className="bg-[#141417]">Premium Batch</option>
-              <option value="Seasonal" className="bg-[#141417]">Seasonal</option>
-              <option value="Everyday" className="bg-[#141417]">Everyday</option>
-              <option value="Specialty" className="bg-[#141417]">Specialty</option>
+              <option value="All">All Batches</option>
+              <option value="Premium Batch">Premium Batch</option>
+              <option value="Seasonal">Seasonal</option>
+              <option value="Everyday">Everyday</option>
+              <option value="Specialty">Specialty</option>
             </select>
 
             <button
               onClick={handleExportCSV}
-              className="px-4 py-2 bg-[#161619] border border-white/10 text-slate-300 rounded-xl font-bold text-xs hover:bg-white/5 hover:text-white transition-colors flex items-center gap-1.5 shadow-md"
+              className="action-btn-secondary"
             >
-              <Download className="w-4 h-4 text-indigo-400" />
-              <span>Export CSV</span>
+              <Download className="icon-sm" />
+              <span>{t('reports.exportReportBtn')}</span>
             </button>
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="table-responsive">
+          <table className="data-table">
             <thead>
-              <tr className="bg-[#161619] border-b border-white/5">
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase">FLAVOR NAME</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase">SYNC STATUS</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase text-right">TOTAL COST</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase text-right">SELLING PRICE</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase text-right">NET PROFIT</th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase w-48">MARGIN HEALTH</th>
-                <th className="px-6 py-3.5 w-12" />
+              <tr className="header-row">
+                <th>FLAVOR NAME</th>
+                <th>SYNC STATUS</th>
+                <th className="text-right">TOTAL COST</th>
+                <th className="text-right">SELLING PRICE</th>
+                <th className="text-right">NET PROFIT</th>
+                <th className="w-48">MARGIN HEALTH</th>
+                <th className="w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-data-tabular text-xs">
+            <tbody>
               {filteredFlavors.map((flavor) => (
-                <tr key={flavor.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
-                        <Gift className="w-5 h-5" />
+                <tr key={flavor.id}>
+                  <td>
+                    <div className="flex-row items-center gap-3">
+                      <div className="icon-wrapper indigo-outline">
+                        <Gift className="icon-sm" />
                       </div>
                       <div>
                         <div className="font-bold text-white">{flavor.name}</div>
-                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">
+                        <div className="flavor-type-tag">
                           {flavor.type}
                         </div>
                       </div>
                     </div>
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td>
                     {flavor.syncStatus === 'Supabase' ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="status-badge-outline emerald">
+                        <span className="status-dot emerald animate-pulse" />
                         Supabase
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 border border-white/10 text-slate-400">
-                        <Smartphone className="w-3.5 h-3.5" />
+                      <span className="status-badge-outline neutral">
+                        <Smartphone className="icon-xs" />
                         Local
                       </span>
                     )}
                   </td>
 
-                  <td className={`px-6 py-4 text-right ${flavor.totalCost > 3 ? 'text-rose-400 font-bold' : 'text-slate-300'}`}>
-                    ${flavor.totalCost.toFixed(2)}
+                  <td className={`text-right ${flavor.totalCost > 3 ? 'text-rose-400 font-bold' : 'text-slate-300'}`}>
+                    {formatCurrency(flavor.totalCost)}
                   </td>
-                  <td className="px-6 py-4 text-right text-slate-300">${flavor.sellingPrice.toFixed(2)}</td>
-                  <td className="px-6 py-4 text-right font-bold text-emerald-400">
-                    +${flavor.netProfit.toFixed(2)}
+                  <td className="text-right text-slate-300">{formatCurrency(flavor.sellingPrice)}</td>
+                  <td className="text-right font-bold text-emerald-400">
+                    +{formatCurrency(flavor.netProfit)}
                   </td>
 
-                  <td className="px-6 py-4">
-                    <div className="w-full bg-white/5 rounded-full h-2 border border-white/5 overflow-hidden">
+                  <td>
+                    <div className="metric-progress-bar">
                       <div
-                        className={`h-full rounded-full ${
+                        className={`metric-progress-fill ${
                           flavor.marginHealthPercent >= 65
-                            ? 'bg-emerald-400'
+                            ? 'health'
                             : flavor.marginHealthPercent >= 40
-                            ? 'bg-indigo-400'
-                            : 'bg-rose-400'
+                            ? 'moderate'
+                            : 'warning'
                         }`}
                         style={{ width: `${flavor.marginHealthPercent}%` }}
                       />
                     </div>
                   </td>
 
-                  <td className="px-6 py-4 text-right relative">
+                  <td className="text-right relative">
                     <button
                       onClick={() => setActiveMenuId(activeMenuId === flavor.id ? null : flavor.id)}
-                      className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                      className="menu-toggle-btn"
                     >
-                      <MoreVertical className="w-4 h-4" />
+                      <MoreVertical className="icon-sm" />
                     </button>
 
                     {activeMenuId === flavor.id && (
-                      <div className="absolute right-6 top-12 bg-[#141417] border border-white/10 rounded-xl shadow-2xl py-1.5 text-xs text-left w-40 z-30 text-white">
+                      <div className="dropdown-menu">
                         <button
                           onClick={() => {
                             setActiveMenuId(null);
                             alert(`Flavor Options for ${flavor.name}: Unit cost breakdown calculated.`);
                           }}
-                          className="w-full px-3 py-1.5 hover:bg-white/5 text-slate-300 hover:text-white"
+                          className="dropdown-item"
                         >
                           View Unit Economics
                         </button>
@@ -259,85 +261,85 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         </div>
 
         {/* Table Footer */}
-        <div className="p-4 bg-[#161619] border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+        <div className="pagination-footer">
+          <span className="pagination-info">
             SHOWING 1-{filteredFlavors.length} OF {flavors.length} FLAVORS
           </span>
-          <div className="flex items-center gap-1.5">
-            <button className="p-1.5 bg-[#141417] border border-white/10 rounded-lg text-slate-500 disabled:opacity-30" disabled>
-              <ChevronLeft className="w-4 h-4" />
+          <div className="pagination-controls">
+            <button className="page-btn disabled" disabled>
+              <ChevronLeft className="icon-sm" />
             </button>
-            <button className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-bold text-xs">1</button>
-            <button className="w-8 h-8 hover:bg-white/5 text-slate-400 rounded-lg font-bold text-xs">2</button>
-            <button className="w-8 h-8 hover:bg-white/5 text-slate-400 rounded-lg font-bold text-xs">3</button>
-            <button className="p-1.5 bg-[#141417] border border-white/10 rounded-lg text-slate-300 hover:bg-white/5">
-              <ChevronRight className="w-4 h-4" />
+            <button className="page-btn active">1</button>
+            <button className="page-btn">2</button>
+            <button className="page-btn">3</button>
+            <button className="page-btn">
+              <ChevronRight className="icon-sm" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Bottom Actionable Insights Bento Grid */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="insights-grid">
         {/* AI Advisory Card */}
         {advisory.status === 'active' ? (
-          <div className="col-span-12 md:col-span-8 bg-[#141417] p-8 rounded-3xl border border-white/5 relative overflow-hidden group card-shadow">
-            <div className="relative z-10 flex flex-col h-full justify-between">
+          <div className="advisory-card relative group">
+            <div className="relative z-10 flex-col h-full justify-between">
               <div>
-                <span className="inline-flex px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">
-                  AI Advisory
+                <span className="status-badge-outline indigo mb-4 inline-flex">
+                  {t('reports.aiAdvisory')}
                 </span>
-                <h3 className="font-sans text-2xl font-bold text-white mb-2">
+                <h3 className="advisory-title mb-2">
                   {advisory.title}
                 </h3>
-                <p className="text-xs text-slate-300 max-w-xl mb-6 leading-relaxed">
+                <p className="advisory-desc mb-6">
                   {advisory.body}
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-4">
+              <div className="advisory-actions">
                 <button
                   onClick={onUpdateRecipeFromAdvisory}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl font-bold text-xs hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-950/50 active:scale-95"
+                  className="action-btn-primary"
                 >
-                  Update Recipe Ingredients
+                  {t('reports.applyOptimization')}
                 </button>
                 <button
                   onClick={onDismissAdvisory}
-                  className="bg-[#161619] border border-white/10 text-slate-300 px-6 py-3 rounded-xl font-bold text-xs hover:bg-white/5 hover:text-white transition-all"
+                  className="action-btn-secondary"
                 >
-                  Dismiss Alert
+                  {t('reports.dismiss')}
                 </button>
               </div>
             </div>
 
             {/* Decorative Graphic */}
-            <div className="absolute right-6 bottom-6 opacity-10 pointer-events-none">
-              <Lightbulb className="w-40 h-40 text-indigo-400" />
+            <div className="advisory-icon-bg">
+              <Lightbulb className="icon-hero" />
             </div>
           </div>
         ) : (
-          <div className="col-span-12 md:col-span-8 bg-emerald-500/10 p-8 rounded-3xl border border-emerald-500/20 flex items-center gap-4">
-            <CheckCircle2 className="w-8 h-8 text-emerald-400 shrink-0" />
+          <div className="advisory-card-resolved">
+            <CheckCircle2 className="icon-lg emerald shrink-0" />
             <div>
-              <h3 className="font-bold text-sm text-emerald-400">Advisory Resolved</h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Double Dark Cocoa recipe updated with Bulk Cocoa supplier Natura ($0.45/scoop savings applied).
+              <h3 className="advisory-title-small emerald">Advisory Resolved</h3>
+              <p className="advisory-desc mt-0.5">
+                Double Dark Cocoa recipe updated with Bulk Cocoa supplier Natura ({formatCurrency(0.45)}/scoop savings applied).
               </p>
             </div>
           </div>
         )}
 
         {/* Supabase Sync Action Card */}
-        <div className="col-span-12 md:col-span-4 bg-[#141417] border border-white/5 p-6 rounded-3xl card-shadow flex flex-col items-center text-center justify-between">
-          <div className="w-14 h-14 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-2xl flex items-center justify-center mb-2 mt-2">
-            <CloudUpload className="w-7 h-7" />
+        <div className="sync-card">
+          <div className="sync-icon-wrapper mb-2 mt-2">
+            <CloudUpload className="icon-lg" />
           </div>
           <div>
-            <h3 className="font-sans text-xl font-bold text-white mb-2">
-              Supabase Sync
+            <h3 className="sync-title mb-2">
+              {t('reports.databaseSync')}
             </h3>
-            <p className="text-xs text-slate-400 mb-6">
+            <p className="sync-desc mb-6">
               {pendingSyncCount > 0 
                 ? `${pendingSyncCount} flavors have local changes that haven't been pushed to the main database.`
                 : 'All flavor profitability models are fully synchronized with Cloud database.'}
@@ -346,9 +348,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           <button
             onClick={onSyncData}
             disabled={pendingSyncCount === 0}
-            className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold text-xs hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-950/50 active:scale-95 disabled:opacity-40 flex items-center justify-center gap-2"
+            className={`action-btn-primary full-width ${pendingSyncCount === 0 ? 'disabled' : ''}`}
           >
-            <CloudUpload className="w-4 h-4" />
+            <CloudUpload className="icon-sm" />
             <span>{pendingSyncCount > 0 ? `Sync ${pendingSyncCount} Pending Changes` : 'All Synced'}</span>
           </button>
         </div>

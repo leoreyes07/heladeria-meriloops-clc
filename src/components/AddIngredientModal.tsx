@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Calculator } from 'lucide-react';
 import { IngredientItem } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface AddIngredientModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
   const [totalCost, setTotalCost] = useState<string>('');
   const [category, setCategory] = useState<'Dairy' | 'Bases' | 'Inclusions' | 'Flavorings'>('Dairy');
   const [supplier, setSupplier] = useState('');
+  const { t, formatCurrency, currency } = useSettings();
 
   if (!isOpen) return null;
 
@@ -59,73 +61,73 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#141417] rounded-3xl shadow-2xl w-full max-w-lg border border-white/10 overflow-hidden text-white">
+    <div className="modal-overlay">
+      <div className="modal-content">
         {/* Modal Header */}
-        <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#161619]">
-          <h3 className="font-sans text-xl font-light tracking-tight text-white">
-            New <span className="font-semibold text-indigo-400">Ingredient</span>
+        <div className="modal-header">
+          <h3 className="modal-title">
+            {t('modals.addIngredient').split(' ').slice(0, -1).join(' ')} <span>{t('modals.addIngredient').split(' ').pop()}</span>
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-rose-400 transition-colors p-1 rounded-lg"
+            className="modal-close-btn"
           >
-            <X className="w-5 h-5" />
+            <X className="icon-sm" />
           </button>
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
-                Ingredient Name
+        <form onSubmit={handleSubmit} className="modal-body">
+          <div className="form-grid-2">
+            <div className="form-group full-width">
+              <label className="form-label">
+                {t('modals.name')}
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Organic Strawberries"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs text-white placeholder-slate-600"
+                className="form-input"
                 required
               />
             </div>
 
-            <div>
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
-                Category
+            <div className="form-group">
+              <label className="form-label">
+                {t('modals.category')}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs text-white"
+                className="form-select"
               >
-                <option value="Dairy" className="bg-[#141417]">Dairy</option>
-                <option value="Bases" className="bg-[#141417]">Bases</option>
-                <option value="Inclusions" className="bg-[#141417]">Inclusions</option>
-                <option value="Flavorings" className="bg-[#141417]">Flavorings</option>
+                <option value="Dairy">{t('ingredients.dairy')}</option>
+                <option value="Bases">{t('ingredients.bases')}</option>
+                <option value="Inclusions">Inclusions</option>
+                <option value="Flavorings">{t('ingredients.flavorings')}</option>
               </select>
             </div>
 
-            <div>
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
-                Unit Type
+            <div className="form-group">
+              <label className="form-label">
+                {t('modals.unit')}
               </label>
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs text-white"
+                className="form-select"
               >
-                <option value="Liters" className="bg-[#141417]">Liters (L)</option>
-                <option value="kg" className="bg-[#141417]">Kilograms (kg)</option>
-                <option value="g" className="bg-[#141417]">Grams (g)</option>
-                <option value="ml" className="bg-[#141417]">Milliliters (ml)</option>
-                <option value="ct" className="bg-[#141417]">Units (ct)</option>
+                <option value="Liters">Liters (L)</option>
+                <option value="kg">Kilograms (kg)</option>
+                <option value="g">Grams (g)</option>
+                <option value="ml">Milliliters (ml)</option>
+                <option value="ct">Units (ct)</option>
               </select>
             </div>
 
-            <div>
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
+            <div className="form-group">
+              <label className="form-label">
                 Purchase Qty
               </label>
               <input
@@ -134,14 +136,14 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
                 value={purchaseQty}
                 onChange={(e) => setPurchaseQty(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs font-data-tabular text-white placeholder-slate-600"
+                className="form-input font-data-tabular"
                 required
               />
             </div>
 
-            <div>
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
-                Total Cost ($)
+            <div className="form-group">
+              <label className="form-label">
+                Total Cost ({currency === 'NIO' ? 'C$' : '$'})
               </label>
               <input
                 type="number"
@@ -149,50 +151,50 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
                 value={totalCost}
                 onChange={(e) => setTotalCost(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs font-data-tabular text-white placeholder-slate-600"
+                className="form-input font-data-tabular"
                 required
               />
             </div>
 
-            <div className="col-span-2">
-              <label className="block font-bold text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">
-                Supplier / Vendor (Optional)
+            <div className="form-group full-width">
+              <label className="form-label">
+                {t('modals.supplier')} (Optional)
               </label>
               <input
                 type="text"
                 value={supplier}
                 onChange={(e) => setSupplier(e.target.value)}
                 placeholder="e.g. Local Artisanal Dairy Co."
-                className="w-full px-4 py-2.5 rounded-xl bg-[#161619] border border-white/10 focus:border-indigo-500/50 outline-none text-xs text-white placeholder-slate-600"
+                className="form-input"
               />
             </div>
 
-            <div className="col-span-2">
-              <div className="bg-[#161619] p-3.5 rounded-2xl border border-dashed border-white/10 flex justify-between items-center">
-                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  <Calculator className="w-4 h-4 text-indigo-400" />
+            <div className="form-group full-width">
+              <div className="calc-result-box">
+                <div className="calc-result-label">
+                  <Calculator className="icon-sm indigo" />
                   <span>Calculated Unit Cost</span>
                 </div>
-                <div className="text-emerald-400 font-bold text-lg font-data-tabular">
-                  ${calculatedUnitCost.toFixed(2)} / {unit.toLowerCase().includes('liter') ? 'L' : unit}
+                <div className="calc-result-value emerald">
+                  {formatCurrency(calculatedUnitCost)} / {unit.toLowerCase().includes('liter') ? 'L' : unit}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 flex gap-3 border-t border-white/5">
+          <div className="modal-footer">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 border border-white/10 text-slate-300 font-bold rounded-xl hover:bg-white/5 transition-colors text-xs"
+              className="action-btn-secondary flex-1"
             >
-              Cancel
+              {t('modals.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition-all text-xs shadow-lg shadow-indigo-950/50"
+              className="action-btn-primary flex-1"
             >
-              Save Ingredient
+              {t('modals.add')}
             </button>
           </div>
         </form>

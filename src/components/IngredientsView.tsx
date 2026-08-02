@@ -11,6 +11,7 @@ import {
   Edit2
 } from 'lucide-react';
 import { IngredientItem } from '../types';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface IngredientsViewProps {
   ingredients: IngredientItem[];
@@ -27,6 +28,7 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
 }) => {
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const { t, formatCurrency } = useSettings();
 
   const filteredIngredients = ingredients.filter((item) => {
     const matchesQuery = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,193 +57,181 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
   };
 
   return (
-    <div className="p-6 max-w-[1280px] mx-auto w-full">
+    <div className="view-container">
       {/* Dashboard Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-[#141417] border border-white/5 p-6 rounded-2xl hover:-translate-y-0.5 transition-all duration-200 card-shadow">
-          <div className="flex justify-between items-start mb-2">
-            <span className="text-slate-500 font-bold text-[10px] uppercase tracking-wider">
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-header">
+            <span className="stat-label">
               Total SKUs
             </span>
-            <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-              <ShoppingBasket className="w-5 h-5" />
+            <div className="stat-icon-wrapper indigo">
+              <ShoppingBasket className="stat-icon" />
             </div>
           </div>
-          <div className="font-sans text-3xl font-light text-white">
+          <div className="stat-value">
             {ingredients.length}
           </div>
-          <div className="text-xs text-slate-400 mt-2 flex items-center">
-            <TrendingUp className="w-3.5 h-3.5 mr-1 text-indigo-400" />
-            <span className="text-indigo-400 font-bold mr-1">+3</span> this month
+          <div className="stat-subtext flex-row items-center">
+            <TrendingUp className="stat-trend-icon indigo" />
+            <span className="stat-trend-value indigo">+3</span> this month
           </div>
         </div>
 
-        <div className="bg-[#141417] border border-white/5 p-6 rounded-2xl hover:-translate-y-0.5 transition-all duration-200 card-shadow">
-          <div className="flex justify-between items-start mb-2">
-            <span className="text-slate-500 font-bold text-[10px] uppercase tracking-wider">
+        <div className="stat-card">
+          <div className="stat-header">
+            <span className="stat-label">
               Avg Margin
             </span>
-            <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-              <DollarSign className="w-5 h-5" />
+            <div className="stat-icon-wrapper emerald">
+              <DollarSign className="stat-icon" />
             </div>
           </div>
-          <div className="font-sans text-3xl font-light text-white">
+          <div className="stat-value">
             68.4%
           </div>
-          <div className="w-full bg-white/5 h-1.5 rounded-full mt-3 overflow-hidden border border-white/5">
-            <div className="bg-emerald-400 h-full" style={{ width: '68.4%' }} />
+          <div className="metric-progress-bar mt-3">
+            <div className="metric-progress-fill" style={{ width: '68.4%' }} />
           </div>
         </div>
 
-        <div className="bg-[#141417] border border-white/5 p-6 rounded-2xl hover:-translate-y-0.5 transition-all duration-200 card-shadow">
-          <div className="flex justify-between items-start mb-2">
-            <span className="text-slate-500 font-bold text-[10px] uppercase tracking-wider">
+        <div className="stat-card">
+          <div className="stat-header">
+            <span className="stat-label">
               Inventory Value
             </span>
-            <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400">
-              <Package className="w-5 h-5" />
+            <div className="stat-icon-wrapper rose">
+              <Package className="stat-icon" />
             </div>
           </div>
-          <div className="font-sans text-3xl font-light text-white">
-            ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="stat-value">
+            {formatCurrency(totalValue)}
           </div>
-          <div className="text-xs text-slate-500 mt-2">
+          <div className="stat-subtext mt-2">
             Updated 2h ago
           </div>
         </div>
       </div>
 
       {/* Header & Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="view-header">
         <div>
-          <h3 className="font-sans text-2xl font-light text-white tracking-tight italic">
-            Ingredient <span className="font-semibold text-indigo-400 not-italic">Ledger</span>
+          <h3 className="view-title">
+            {t('ingredients.title').split(' ')[0]} <span>{t('ingredients.title').split(' ').slice(1).join(' ')}</span>
           </h3>
-          <p className="text-slate-400 text-xs mt-0.5">
-            Real-time cost tracking and stock monitoring.
+          <p className="view-subtitle">
+            {t('ingredients.subtitle')}
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="view-actions">
           {/* Category Filter dropdown */}
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3 py-2 border border-white/10 text-white text-xs font-bold rounded-xl bg-[#161619] outline-none focus:border-indigo-500/50"
+            className="filter-select"
           >
-            <option value="All" className="bg-[#141417]">All Categories</option>
-            <option value="Dairy" className="bg-[#141417]">Dairy</option>
-            <option value="Bases" className="bg-[#141417]">Bases</option>
-            <option value="Inclusions" className="bg-[#141417]">Inclusions</option>
-            <option value="Flavorings" className="bg-[#141417]">Flavorings</option>
+            <option value="All">{t('ingredients.allCategories')}</option>
+            <option value="Dairy">{t('ingredients.dairy')}</option>
+            <option value="Bases">{t('ingredients.bases')}</option>
+            <option value="Inclusions">Inclusions</option>
+            <option value="Flavorings">{t('ingredients.flavorings')}</option>
           </select>
 
           <button
             onClick={handleExportCSV}
-            className="px-4 py-2 bg-[#161619] border border-white/10 text-slate-300 font-bold rounded-xl hover:bg-white/5 hover:text-white transition-colors flex items-center text-xs shadow-md"
+            className="action-btn-secondary"
           >
-            <Download className="mr-1.5 w-4 h-4 text-indigo-400" /> Export CSV
+            <Download className="btn-icon" /> {t('reports.exportReportBtn')}
           </button>
           
           <button
             onClick={onOpenAddIngredientModal}
-            className="px-5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition-all flex items-center text-xs shadow-lg shadow-indigo-950/50"
+            className="action-btn-primary"
           >
-            <Plus className="mr-1.5 w-4 h-4" /> Add Ingredient
+            <Plus className="btn-icon" /> {t('ingredients.addIngredientBtn')}
           </button>
         </div>
       </div>
 
       {/* Main Data Table */}
-      <div className="bg-[#141417] border border-white/5 rounded-3xl overflow-hidden card-shadow">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+      <div className="table-card">
+        <div className="table-responsive">
+          <table className="data-table">
             <thead>
-              <tr className="bg-[#161619] border-b border-white/5">
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider">
-                  Ingredient Name
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider">
-                  Unit
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-right">
-                  Purchase Qty
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-right">
-                  Total Cost
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-right">
-                  Unit Cost
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider text-center">
-                  Status
-                </th>
-                <th className="px-6 py-3.5 font-bold text-[10px] text-slate-500 uppercase tracking-wider w-12" />
+              <tr>
+                <th>{t('ingredients.tableItem')}</th>
+                <th>Unit</th>
+                <th className="text-right">Purchase Qty</th>
+                <th className="text-right">Total Cost</th>
+                <th className="text-right">{t('ingredients.tableUnitCost')}</th>
+                <th className="text-center">{t('ingredients.tableStatus')}</th>
+                <th className="w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-data-tabular text-xs">
+            <tbody>
               {filteredIngredients.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="empty-state-cell">
                     No ingredients found matching your search.
                   </td>
                 </tr>
               ) : (
                 filteredIngredients.map((item) => (
-                  <tr key={item.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-white">
+                  <tr key={item.id}>
+                    <td className="font-semibold text-white">
                       <div>
                         <span>{item.name}</span>
                         {item.supplier && (
-                          <div className="text-[11px] font-normal text-slate-500">
+                          <div className="supplier-subtext">
                             {item.supplier}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-400">{item.unit}</td>
-                    <td className="px-6 py-4 text-right font-medium text-slate-300">
+                    <td className="text-slate-400">{item.unit}</td>
+                    <td className="text-right font-medium text-slate-300">
                       {item.purchaseQty.toFixed(2)}
                     </td>
-                    <td className="px-6 py-4 text-right font-medium text-white">
-                      ${item.totalCost.toFixed(2)}
+                    <td className="text-right font-medium text-white">
+                      {formatCurrency(item.totalCost)}
                     </td>
-                    <td className="px-6 py-4 text-right text-indigo-400 font-bold">
-                      ${item.unitCost.toFixed(2)}/{item.unit.toLowerCase().includes('liter') ? 'L' : item.unit}
+                    <td className="text-right text-indigo-400 font-bold">
+                      {formatCurrency(item.unitCost)}/{item.unit.toLowerCase().includes('liter') ? 'L' : item.unit}
                     </td>
-                    <td className="px-6 py-4">
+                    <td>
                       <div className="flex justify-center">
                         <span
-                          className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          className={`status-badge ${
                             item.status === 'In Stock'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              ? 'emerald'
                               : item.status === 'Low Stock'
-                              ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                              : 'bg-white/5 text-slate-400 border border-white/10'
+                              ? 'rose'
+                              : 'neutral'
                           }`}
                         >
-                          {item.status}
+                          {item.status === 'In Stock' ? t('ingredients.inStock') : item.status === 'Low Stock' ? t('ingredients.lowStock') : item.status}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right relative">
+                    <td className="text-right relative">
                       <button
                         onClick={() => setActiveMenuId(activeMenuId === item.id ? null : item.id)}
-                        className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        className="menu-toggle-btn"
                       >
-                        <MoreVertical className="w-4 h-4" />
+                        <MoreVertical className="menu-icon" />
                       </button>
 
                       {activeMenuId === item.id && (
-                        <div className="absolute right-6 top-12 bg-[#141417] border border-white/10 rounded-xl shadow-2xl py-1.5 w-36 z-30 text-xs text-left text-white">
+                        <div className="dropdown-menu">
                           <button
                             onClick={() => {
                               setActiveMenuId(null);
                               alert(`Editing ingredient: ${item.name}`);
                             }}
-                            className="w-full px-3 py-1.5 flex items-center gap-2 hover:bg-white/5 text-slate-300 hover:text-white"
+                            className="dropdown-item"
                           >
-                            <Edit2 className="w-3.5 h-3.5 text-indigo-400" />
+                            <Edit2 className="dropdown-icon indigo" />
                             <span>Edit Details</span>
                           </button>
                           <button
@@ -249,9 +239,9 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
                               setActiveMenuId(null);
                               onDeleteIngredient(item.id);
                             }}
-                            className="w-full px-3 py-1.5 flex items-center gap-2 hover:bg-rose-500/10 text-rose-400"
+                            className="dropdown-item danger"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="dropdown-icon" />
                             <span>Delete SKU</span>
                           </button>
                         </div>
@@ -265,18 +255,18 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
         </div>
 
         {/* Pagination Footer */}
-        <div className="px-6 py-3.5 border-t border-white/5 flex items-center justify-between bg-[#161619]">
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+        <div className="pagination-footer">
+          <span className="pagination-info">
             Showing {filteredIngredients.length} of {ingredients.length} ingredients
           </span>
-          <div className="flex gap-1">
-            <button className="px-2 py-1 border border-white/10 rounded-lg text-xs text-slate-500 disabled:opacity-30" disabled>
+          <div className="pagination-controls">
+            <button className="page-btn disabled" disabled>
               Prev
             </button>
-            <button className="px-2.5 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-xs font-bold">1</button>
-            <button className="px-2.5 py-1 border border-white/10 hover:bg-white/5 rounded-lg text-xs font-medium text-slate-400">2</button>
-            <button className="px-2.5 py-1 border border-white/10 hover:bg-white/5 rounded-lg text-xs font-medium text-slate-400">3</button>
-            <button className="px-2 py-1 border border-white/10 rounded-lg text-xs text-slate-300 hover:bg-white/5">
+            <button className="page-btn active">1</button>
+            <button className="page-btn">2</button>
+            <button className="page-btn">3</button>
+            <button className="page-btn">
               Next
             </button>
           </div>
@@ -284,33 +274,33 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
       </div>
 
       {/* Visual Context - Inventory Insights & Cost Tip */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-2xl overflow-hidden relative h-60 group shadow-2xl border border-white/5">
+      <div className="insights-grid mt-8">
+        <div className="image-card group">
           <img
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDbKom_Pd4yet4fvpd1ejgj2TwfO_UmEw9F7y-pb1JtgjWt1jwzOhRRX1QSEPKzOLpxbJD7O9jURn6FZ42JxPJJ6kYLX4jDJAfnZMw2nGpvrIDf4XMUOdKzoBJeQWOGLdu8fJu1EkXlBQ7aZZmeilejtKNPaz6MksTKOWq3Zx4-AjxOhZmwKjs-gW6ujFbjJBUTVIP3eWYJGe6r2YVjHLv2Vcn3_N8YVL_G9bVwbK2YZr3MKk2zFO5"
             alt="Artisanal ice cream ingredients"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
+            className="image-card-img"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/40 to-transparent flex flex-col justify-end p-6">
-            <h4 className="text-white font-sans text-lg font-bold">
+          <div className="image-card-overlay">
+            <h4 className="image-card-title">
               Inventory Insights
             </h4>
-            <p className="text-slate-300 text-xs mt-1 leading-relaxed">
+            <p className="image-card-desc">
               Premium ingredients currently account for 64% of your COGS. Consider seasonal bulk purchasing for Vanilla and Pistachios.
             </p>
           </div>
         </div>
 
-        <div className="bg-[#141417] rounded-2xl p-6 border border-white/5 flex flex-col justify-center card-shadow">
-          <h4 className="font-sans text-lg font-bold text-indigo-400 mb-2">
+        <div className="tip-card">
+          <h4 className="tip-card-title">
             Cost Optimization Tip
           </h4>
-          <p className="text-slate-300 text-xs leading-relaxed mb-4">
+          <p className="tip-card-desc">
             Your unit cost for <span className="font-bold text-white">Whole Cream</span> has increased by 12% since last month. Check the vendor dashboard for alternative local artisanal suppliers to maintain your 68% profit margin goal.
           </p>
           <button 
-            onClick={() => alert('Market Rates Comparison: Local Creamery Co ($7.90/L) vs Artisanal Dairy ($8.50/L). Switching yields +$0.60/L savings.')}
-            className="w-fit px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 rounded-xl font-bold text-xs hover:bg-indigo-500/20 transition-all active:scale-95 shadow-md"
+            onClick={() => alert(`Market Rates Comparison: Local Creamery Co (${formatCurrency(7.90)}/L) vs Artisanal Dairy (${formatCurrency(8.50)}/L). Switching yields +${formatCurrency(0.60)}/L savings.`)}
+            className="action-btn-secondary"
           >
             View Market Rates
           </button>
