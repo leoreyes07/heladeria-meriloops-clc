@@ -125,7 +125,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="topbar-avatar"
         >
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAtc4FCAOOQjn6AuZNyBeTsCjB37pqjgwbUxjm0xBCz0NRlvlmUboQlayLvSS78-GA_LOpzw8pMGgc-mtMOQbfxcSYilHCPuhLB1W1_3BspvFIDSL-mNovvs1W9xj_ETFsmXsLNGnXZg_57DtIsNuu2iEhnAcy7OyhRO2A-YHJvsrRTl4dmOIKbGpA5rlk6ax2u5v-f001Wi73-ebBKxgca9DJZKWr8ZLjxNMPjpJUZF5nteks4_jd"
+            src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
             alt="Operational Manager"
           />
         </div>

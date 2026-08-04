@@ -30,6 +30,7 @@ import {
   OrderItem 
 } from './types';
 import { useSettings } from './contexts/SettingsContext';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
@@ -38,11 +39,11 @@ export default function App() {
   const { t, formatCurrency } = useSettings();
 
   // Data Collections State
-  const [ingredients, setIngredients] = useState<IngredientItem[]>(INITIAL_INGREDIENTS);
-  const [recipes, setRecipes] = useState<RecipeItem[]>(INITIAL_RECIPES);
-  const [flavors, setFlavors] = useState<FlavorProfitability[]>(INITIAL_FLAVORS);
-  const [advisory, setAdvisory] = useState<AIAdvisoryAlert>(INITIAL_ADVISORY);
-  const [orders, setOrders] = useState<OrderItem[]>(INITIAL_ORDERS);
+  const [ingredients, setIngredients] = useLocalStorage<IngredientItem[]>('meriloops_ingredients', INITIAL_INGREDIENTS);
+  const [recipes, setRecipes] = useLocalStorage<RecipeItem[]>('meriloops_recipes', INITIAL_RECIPES);
+  const [flavors, setFlavors] = useLocalStorage<FlavorProfitability[]>('meriloops_flavors', INITIAL_FLAVORS);
+  const [advisory, setAdvisory] = useLocalStorage<AIAdvisoryAlert>('meriloops_advisory', INITIAL_ADVISORY);
+  const [orders, setOrders] = useLocalStorage<OrderItem[]>('meriloops_orders', INITIAL_ORDERS);
 
   // Sync & UI States
   const [isSyncing, setIsSyncing] = useState(false);
