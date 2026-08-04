@@ -15,6 +15,7 @@
   --color-text-main: #f1f5f9; /* slate-100 */
   --color-text-muted: #94a3b8; /* slate-400 */
   --color-text-faint: #64748b; /* slate-500 */
+  --color-text-bright: #ffffff;
   
   --color-primary: #818cf8;
   --color-primary-indigo: #6366f1;
@@ -31,6 +32,68 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+}
+
+.theme-light {
+  --color-surface-canvas: #f8fafc;
+  --color-surface-panel: #ffffff;
+  --color-surface-sidebar: #f1f5f9;
+  --color-surface-input: #f1f5f9;
+  
+  --color-border-subtle: rgba(0, 0, 0, 0.05);
+  --color-border-default: rgba(0, 0, 0, 0.1);
+  --color-border-hover: rgba(0, 0, 0, 0.2);
+  
+  --color-text-main: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-faint: #64748b;
+  --color-text-bright: #0f172a;
+  
+  --color-primary: #6366f1;
+  --color-primary-indigo: #4f46e5;
+  --color-emerald-accent: #10b981;
+  --color-emerald-dark: #059669;
+  --color-rose-alert: #e11d48;
+  --color-amber-alert: #d97706;
+  --color-purple-accent: #9333ea;
+  
+  --shadow-card: 0px 4px 10px -2px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0px 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .dashboard-title,
+.theme-light .sidebar-brand-title,
+.theme-light .sidebar-brand-subtitle,
+.theme-light .metric-value,
+.theme-light .section-title,
+.theme-light .action-btn-title,
+.theme-light .alert-title,
+.theme-light .image-card-title,
+.theme-light .recipe-card-title,
+.theme-light .stat-label-light,
+.theme-light .form-input, 
+.theme-light .form-select,
+.theme-light .cost-value,
+.theme-light .breakdown-val,
+.theme-light .advisory-title,
+.theme-light .sync-title,
+.theme-light .modal-content,
+.theme-light th,
+.theme-light td.font-semibold {
+  color: var(--color-text-bright) !important;
+}
+
+.theme-light .dashboard-subtitle,
+.theme-light .metric-subtext,
+.theme-light .action-btn-desc,
+.theme-light .alert-desc {
+  color: var(--color-text-muted) !important;
+}
+
+.theme-light .highlight-card {
+  background: linear-gradient(to bottom right, #e0e7ff, #f3e8ff) !important;
+  color: var(--color-text-bright) !important;
+  border-color: #c7d2fe !important;
 }
 
 /* Global Reset & Base */
@@ -110,7 +173,7 @@ img {
 .full-width { width: 100%; grid-column: 1 / -1; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
-.text-white { color: white; }
+.text-white { color: var(--color-text-bright); }
 .text-muted { color: var(--color-text-muted); }
 .font-bold { font-weight: 700; }
 .font-semibold { font-weight: 600; }
@@ -210,6 +273,13 @@ img {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  overflow: hidden;
+}
+
+.sidebar-brand-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .sidebar-brand-title {
@@ -1261,11 +1331,11 @@ img {
 .hero-value { font-family: var(--font-sans); font-size: 2.25rem; font-weight: 300; display: block; margin-top: 0.25rem; }
 .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .summary-box { padding: 0.875rem; border: 1px solid var(--color-border-default); border-radius: var(--radius-2xl); text-align: center; background-color: var(--color-surface-input); }
-.box-value { font-family: var(--font-sans); font-size: 1.25rem; font-weight: 700; color: white; display: block; margin-top: 0.25rem; }
+.box-value { font-family: var(--font-sans); font-size: 1.25rem; font-weight: 700; color: var(--color-text-bright); display: block; margin-top: 0.25rem; }
 .input-with-symbol { display: flex; justify-content: center; align-items: center; gap: 0.25rem; margin-top: 0.25rem; position: relative; }
 .input-with-symbol.right { justify-content: flex-start; }
 .symbol { font-size: 0.75rem; color: var(--color-text-faint); font-weight: 700; }
-.inline-input { width: 4rem; font-family: var(--font-sans); font-size: 1.25rem; font-weight: 700; color: white; text-align: center; border-bottom: 1px solid var(--color-primary-indigo); border-radius: 0; padding: 0; }
+.inline-input { width: 4rem; font-family: var(--font-sans); font-size: 1.25rem; font-weight: 700; color: var(--color-text-bright); text-align: center; border-bottom: 1px solid var(--color-primary-indigo); border-radius: 0; padding: 0; }
 .margin-health-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.5rem; }
 .health-value { font-weight: 700; font-size: 0.75rem; color: var(--color-emerald-accent); }
 .cost-breakdown { border-top: 1px solid var(--color-border-subtle); padding-top: 1rem; }

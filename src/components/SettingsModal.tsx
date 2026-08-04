@@ -9,7 +9,7 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const { language, setLanguage, currency, setCurrency, exchangeRate, setExchangeRate, t } = useSettings();
+  const { theme, setTheme, language, setLanguage, currency, setCurrency, exchangeRate, setExchangeRate, t } = useSettings();
 
   if (!isOpen) return null;
 
@@ -24,6 +24,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
         </div>
 
         <div className="modal-body">
+          <div className="form-group mb-6">
+            <label className="form-label mb-2 flex-row items-center gap-2">
+              {t('modals.theme')}
+            </label>
+            <div className="flex-row gap-4">
+              <label className="flex-row items-center gap-2 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="theme" 
+                  value="dark" 
+                  checked={theme === 'dark'} 
+                  onChange={() => setTheme('dark')} 
+                />
+                <span className="text-white text-sm">{t('modals.darkTheme')}</span>
+              </label>
+              <label className="flex-row items-center gap-2 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="theme" 
+                  value="light" 
+                  checked={theme === 'light'} 
+                  onChange={() => setTheme('light')} 
+                />
+                <span className="text-white text-sm">{t('modals.lightTheme')}</span>
+              </label>
+            </div>
+          </div>
           <div className="form-group mb-6">
             <label className="form-label mb-2 flex-row items-center gap-2">
               <Globe size={14} /> {t('modals.language')}

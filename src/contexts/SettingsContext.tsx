@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations, Language, Currency } from '../i18n/translations';
 
+export type Theme = 'dark' | 'light';
+
 interface SettingsContextProps {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   language: Language;
   setLanguage: (lang: Language) => void;
   currency: Currency;
@@ -15,6 +19,11 @@ interface SettingsContextProps {
 const SettingsContext = createContext<SettingsContextProps | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('app_theme');
+    return (saved as Theme) || 'dark';
+  });
+
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('app_language');
     return (saved as Language) || 'en';
@@ -37,6 +46,15 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   useEffect(() => {
     localStorage.setItem('app_currency', currency);
   }, [currency]);
+
+  useEffect(() => {
+    localStorage.setItem('app_theme', theme);
+    if (theme === 'light') {
+      document.documentElement.classList.add('theme-light');
+    } else {
+      document.documentElement.classList.remove('theme-light');
+    }
+  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem('app_exchange_rate', exchangeRate.toString());
@@ -65,6 +83,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   return (
     <SettingsContext.Provider value={{
+      theme, setTheme,
       language, setLanguage,
       currency, setCurrency,
       exchangeRate, setExchangeRate,
