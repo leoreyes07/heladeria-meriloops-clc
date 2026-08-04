@@ -4,7 +4,7 @@ export type Currency = 'USD' | 'NIO';
 export const translations = {
   en: {
     sidebar: {
-      brandTitle: 'SCOOP LEDGER',
+      brandTitle: 'MERILOOPS ICE CREAM',
       brandSubtitle: 'OPERATIONAL MANAGER',
       coreSystems: 'Core Systems',
       dashboard: 'Dashboard',
@@ -31,7 +31,7 @@ export const translations = {
       profitMargin: 'CURRENT PROFIT MARGIN',
       healthy: 'Healthy',
       topSelling: 'TOP SELLING PRODUCT',
-      profitVsLoss: 'PROFIT VS LOSS SUMMARY',
+      profitVsLoss: 'PROFIT & LOSS SUMMARY',
       profit: 'Profit',
       loss: 'Loss / COGS',
       quickActions: 'QUICK ACTIONS',
@@ -41,7 +41,17 @@ export const translations = {
       checkRecipeDesc: 'Calculate scoop margin',
       reviewOrdersTitle: 'Review Wholesale Orders',
       reviewOrdersDesc: 'Recent wholesale batches',
-      criticalAlerts: 'CRITICAL ALERTS'
+      criticalAlerts: 'CRITICAL ALERTS',
+      thisMonth: 'This Month',
+      lastMonth: 'Last Month',
+      primaryDriverVanilla: 'Primary driver: Madagascar Vanilla import price',
+      mon: 'MON',
+      tue: 'TUE',
+      wed: 'WED',
+      thu: 'THU',
+      fri: 'FRI',
+      sat: 'SAT',
+      sun: 'SUN'
     },
     ingredients: {
       title: 'Ingredient Ledger',
@@ -125,6 +135,9 @@ export const translations = {
       recipeLabelTitle: 'Production Label',
       close: 'Close',
       settingsTitle: 'System Settings',
+      theme: 'Theme',
+      darkTheme: 'Dark Mode',
+      lightTheme: 'Light Mode',
       language: 'Language',
       currency: 'Currency',
       exchangeRate: 'Exchange Rate (USD to NIO)',
@@ -137,7 +150,7 @@ export const translations = {
   },
   es: {
     sidebar: {
-      brandTitle: 'SCOOP LEDGER',
+      brandTitle: 'HELADERÍA MERILOOPS',
       brandSubtitle: 'GESTOR OPERATIVO',
       coreSystems: 'Sistemas Core',
       dashboard: 'Panel de Control',
@@ -174,7 +187,17 @@ export const translations = {
       checkRecipeDesc: 'Calcular margen por porción',
       reviewOrdersTitle: 'Órdenes Mayoristas',
       reviewOrdersDesc: 'Lotes mayoristas recientes',
-      criticalAlerts: 'ALERTAS CRÍTICAS'
+      criticalAlerts: 'ALERTAS CRÍTICAS',
+      thisMonth: 'Este Mes',
+      lastMonth: 'Mes Pasado',
+      primaryDriverVanilla: 'Impulsor principal: Precio imp. Vainilla Madagascar',
+      mon: 'LUN',
+      tue: 'MAR',
+      wed: 'MIE',
+      thu: 'JUE',
+      fri: 'VIE',
+      sat: 'SAB',
+      sun: 'DOM'
     },
     ingredients: {
       title: 'Libro de Ingredientes',
@@ -258,6 +281,9 @@ export const translations = {
       recipeLabelTitle: 'Etiqueta de Producción',
       close: 'Cerrar',
       settingsTitle: 'Configuración del Sistema',
+      theme: 'Tema',
+      darkTheme: 'Modo Oscuro',
+      lightTheme: 'Modo Claro',
       language: 'Idioma',
       currency: 'Moneda',
       exchangeRate: 'Tasa de Cambio (USD a NIO)',

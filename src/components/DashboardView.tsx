@@ -28,18 +28,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenAddIngredientModal,
   onOpenOrders,
 }) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('This Month');
+  const [selectedPeriod, setSelectedPeriod] = useState('thisMonth');
   const { t, formatCurrency } = useSettings();
 
   // Chart data for Profit vs Loss Summary
   const daysData = [
-    { day: 'Mon', profit: 7.2, loss: 4.1 },
-    { day: 'Tue', profit: 8.5, loss: 3.2 },
-    { day: 'Wed', profit: 9.1, loss: 2.8 },
-    { day: 'Thu', profit: 6.4, loss: 4.5 },
-    { day: 'Fri', profit: 11.2, loss: 3.9 },
-    { day: 'Sat', profit: 14.8, loss: 4.2 },
-    { day: 'Sun', profit: 12.3, loss: 3.5 },
+    { day: t('dashboard.mon'), profit: 7.2, loss: 4.1 },
+    { day: t('dashboard.tue'), profit: 8.5, loss: 3.2 },
+    { day: t('dashboard.wed'), profit: 9.1, loss: 2.8 },
+    { day: t('dashboard.thu'), profit: 6.4, loss: 4.5 },
+    { day: t('dashboard.fri'), profit: 11.2, loss: 3.9 },
+    { day: t('dashboard.sat'), profit: 14.8, loss: 4.2 },
+    { day: t('dashboard.sun'), profit: 12.3, loss: 3.5 },
   ];
 
   const handleExportDashboardReport = () => {
@@ -73,11 +73,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
         <div className="dashboard-header-actions">
           <button 
-            onClick={() => setSelectedPeriod(selectedPeriod === 'This Month' ? 'Last Month' : 'This Month')}
+            onClick={() => setSelectedPeriod(selectedPeriod === 'thisMonth' ? 'lastMonth' : 'thisMonth')}
             className="dashboard-btn"
           >
             <Calendar className="dashboard-icon" />
-            <span>{selectedPeriod}</span>
+            <span>{t(`dashboard.${selectedPeriod}`)}</span>
           </button>
           <button 
             onClick={handleExportDashboardReport}
@@ -111,7 +111,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {formatCurrency(12450.80)}
           </h3>
           <p className="metric-subtext">
-            Primary driver: Madagascar Vanilla import price
+            {t('dashboard.primaryDriverVanilla')}
           </p>
         </div>
 
