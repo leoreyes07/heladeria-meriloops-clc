@@ -8,13 +8,17 @@ interface SidebarProps {
   setActiveTab: (tab: NavigationTab) => void;
   onOpenNewRecipeModal: () => void;
   onOpenSettingsModal: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
   onOpenNewRecipeModal,
-  onOpenSettingsModal
+  onOpenSettingsModal,
+  isOpen,
+  onClose
 }) => {
   const { t } = useSettings();
 
@@ -27,7 +31,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="sidebar">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="sidebar-mobile-overlay"
+          onClick={onClose}
+        />
+      )}
+      
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* Brand Header */}
       <div className="sidebar-brand-header">
         <div className="sidebar-brand-logo-container">
@@ -56,7 +69,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                onClose();
+              }}
               className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
             >
               <Icon className={`sidebar-nav-icon ${isActive ? 'active' : ''}`} />
@@ -97,5 +113,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </a>
       </div>
     </aside>
+    </>
   );
 };

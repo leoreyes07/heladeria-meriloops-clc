@@ -23,7 +23,7 @@ Design a web application to record ingredients, calculate the real cost of each 
 | **Synchronization** | Supabase API | Send and retrieve data from the cloud |
 
 ## 4. System Characteristics
-- **UX/UI:** Simple, intuitive, and easy-to-use design for the ice cream shop staff.
+- **UX/UI:** Simple, intuitive, and easy-to-use design for the ice cream shop staff. Designed with a **Mobile First** approach ensuring full usability on mobile devices.
 - **Automation:** Automatic cost calculation without the need for manual formulas from the user.
 - **Specific Business Rules:** Support for water as a main ingredient and exclusion of gas in the calculations for certain products.
 - **Metrics:** Clear view of profitability per product.
@@ -67,7 +67,7 @@ Diseñar una aplicación web para registrar insumos, calcular el costo real de c
 | **Sincronización** | API de Supabase | Enviar y recuperar datos desde la nube |
 
 ## 4. Características del Sistema
-- **UX/UI:** Diseño simple, intuitivo y fácil de usar para el personal de la heladería.
+- **UX/UI:** Diseño simple, intuitivo y fácil de usar para el personal de la heladería. Construido con un enfoque **Mobile First** garantizando total usabilidad en dispositivos móviles.
 - **Automatización:** Cálculo automático de costos sin necesidad de fórmulas manuales por parte del usuario.
 - **Reglas de Negocio Específicas:** Soporte para el agua como insumo principal y exclusión de gas en los cálculos de ciertos productos.
 - **Métricas:** Vista clara de rentabilidad por producto.

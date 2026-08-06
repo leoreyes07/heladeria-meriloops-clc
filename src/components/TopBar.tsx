@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Bell, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Search, Bell, CheckCircle2, RefreshCw, Menu } from 'lucide-react';
 import { NavigationTab, SubTab } from '../types';
 import { useSettings } from '../contexts/SettingsContext';
 
@@ -12,6 +12,7 @@ interface TopBarProps {
   onSyncData: () => void;
   isSyncing: boolean;
   pendingSyncCount: number;
+  onMenuToggle: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -23,6 +24,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSyncData,
   isSyncing,
   pendingSyncCount,
+  onMenuToggle,
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const { t } = useSettings();
@@ -41,6 +43,13 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header className="topbar">
       <div className="topbar-left">
+        <button 
+          className="topbar-menu-btn" 
+          onClick={onMenuToggle}
+          aria-label="Toggle menu"
+        >
+          <Menu className="topbar-icon" />
+        </button>
         <h2 className="topbar-title">
           {getTitle()}
         </h2>

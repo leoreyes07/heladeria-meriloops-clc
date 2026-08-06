@@ -35,6 +35,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [activeSubTab, setActiveSubTab] = useState<SubTab>('inventory');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { t, formatCurrency } = useSettings();
 
@@ -153,6 +154,8 @@ export default function App() {
           setActiveTab('recipes');
         }}
         onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <div className="main-content">
@@ -166,6 +169,7 @@ export default function App() {
           onSyncData={handleSyncData}
           isSyncing={isSyncing}
           pendingSyncCount={pendingSyncCount}
+          onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         />
 
         {/* Toast Notification Banner */}
