@@ -18,7 +18,7 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
   const [unit, setUnit] = useState('Liters');
   const [purchaseQty, setPurchaseQty] = useState<string>('');
   const [totalCost, setTotalCost] = useState<string>('');
-  const [category, setCategory] = useState<'Dairy' | 'Bases' | 'Inclusions' | 'Flavorings'>('Dairy');
+  const [category, setCategory] = useState<'Ice Cream Tubs' | 'Toppings' | 'Syrups & Sauces' | 'Fresh Produce' | 'Packaging'>('Ice Cream Tubs');
   const [supplier, setSupplier] = useState('');
   const { t, formatCurrency, currency } = useSettings();
 
@@ -102,10 +102,11 @@ export const AddIngredientModal: React.FC<AddIngredientModalProps> = ({
                 onChange={(e) => setCategory(e.target.value as any)}
                 className="form-select"
               >
-                <option value="Dairy">{t('ingredients.dairy')}</option>
-                <option value="Bases">{t('ingredients.bases')}</option>
-                <option value="Inclusions">Inclusions</option>
-                <option value="Flavorings">{t('ingredients.flavorings')}</option>
+                <option value="Ice Cream Tubs">{t('ingredients.iceCreamTubs')}</option>
+                <option value="Toppings">{t('ingredients.toppings')}</option>
+                <option value="Syrups & Sauces">{t('ingredients.syrupsSauces')}</option>
+                <option value="Fresh Produce">{t('ingredients.freshProduce')}</option>
+                <option value="Packaging">{t('ingredients.packaging')}</option>
               </select>
             </div>
 

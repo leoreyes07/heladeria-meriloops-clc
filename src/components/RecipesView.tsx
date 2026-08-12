@@ -29,7 +29,7 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
   // New Recipe Form State
   const [recipeName, setRecipeName] = useState('Pistachio Cloud Bliss');
   const [batchSize, setBatchSize] = useState<number>(5);
-  const [baseType, setBaseType] = useState('Premium Cream');
+  const [baseType, setBaseType] = useState('Dessert Bowl');
   const [suggestedRetail, setSuggestedRetail] = useState<number>(4.50);
 
   // Default ingredient rows matching the prompt layout
@@ -55,11 +55,14 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
     : 0;
 
   // Breakdown calculation
-  const dairyCost = selectedIngredients
-    .filter(i => i.name.toLowerCase().includes('cream') || i.name.toLowerCase().includes('milk'))
+  const iceCreamCost = selectedIngredients
+    .filter(i => {
+      const fullIng = ingredients.find(ing => ing.id === i.ingredientId);
+      return fullIng?.category === 'Ice Cream Tubs';
+    })
     .reduce((sum, i) => sum + i.cost, 0);
   
-  const inclusionsCost = totalBatchCost - dairyCost;
+  const inclusionsCost = totalBatchCost - iceCreamCost;
 
   const handleIngredientChange = (index: number, field: 'ingredientId' | 'qty', value: any) => {
     const updated = [...selectedIngredients];
@@ -255,9 +258,10 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                     onChange={(e) => setBaseType(e.target.value)}
                     className="form-select"
                   >
-                    <option value="Premium Cream">Premium Cream</option>
-                    <option value="Vegan Oat">Vegan Oat</option>
-                    <option value="Fruit Sorbet">Fruit Sorbet</option>
+                    <option value="Dessert Bowl">Dessert Bowl (Postre)</option>
+                    <option value="Milkshake">Milkshake (Batido)</option>
+                    <option value="Cone/Cup">Cone/Cup (Helado Simple)</option>
+                    <option value="Specialty">Specialty (Especialidad)</option>
                   </select>
                 </div>
               </div>
@@ -439,9 +443,9 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
                   <div className="breakdown-list">
                     <div className="breakdown-item">
                       <span className="breakdown-label">
-                        <span className="dot indigo" /> Dairy Base
+                        <span className="dot indigo" /> Helado / Base
                       </span>
-                      <span className="breakdown-val">{formatCurrency(dairyCost)}</span>
+                      <span className="breakdown-val">{formatCurrency(iceCreamCost)}</span>
                     </div>
                     <div className="breakdown-item">
                       <span className="breakdown-label">

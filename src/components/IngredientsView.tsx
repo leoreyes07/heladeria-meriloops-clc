@@ -132,10 +132,11 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
             className="filter-select"
           >
             <option value="All">{t('ingredients.allCategories')}</option>
-            <option value="Dairy">{t('ingredients.dairy')}</option>
-            <option value="Bases">{t('ingredients.bases')}</option>
-            <option value="Inclusions">Inclusions</option>
-            <option value="Flavorings">{t('ingredients.flavorings')}</option>
+            <option value="Ice Cream Tubs">{t('ingredients.iceCreamTubs')}</option>
+            <option value="Toppings">{t('ingredients.toppings')}</option>
+            <option value="Syrups & Sauces">{t('ingredients.syrupsSauces')}</option>
+            <option value="Fresh Produce">{t('ingredients.freshProduce')}</option>
+            <option value="Packaging">{t('ingredients.packaging')}</option>
           </select>
 
           <button

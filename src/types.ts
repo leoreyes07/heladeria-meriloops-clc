@@ -9,7 +9,7 @@ export interface IngredientItem {
   totalCost: number;
   unitCost: number; // totalCost / purchaseQty
   status: 'In Stock' | 'Low Stock' | 'Ordered';
-  category: 'Dairy' | 'Bases' | 'Inclusions' | 'Flavorings' | 'Packaging';
+  category: 'Ice Cream Tubs' | 'Toppings' | 'Syrups & Sauces' | 'Fresh Produce' | 'Packaging';
   supplier?: string;
   lastUpdated?: string;
 }
@@ -26,7 +26,7 @@ export interface RecipeItem {
   id: string;
   name: string;
   batchSizeLiters: number;
-  baseType: string; // 'Premium Cream' | 'Vegan Oat' | 'Fruit Sorbet'
+  baseType: 'Dessert Bowl' | 'Milkshake' | 'Cone/Cup' | 'Specialty';
   ingredients: RecipeIngredient[];
   suggestedRetail: number;
   createdDate: string;
