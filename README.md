@@ -1,10 +1,10 @@
-# Scoop Ledger 🍦
+# Heladería Meriloops 🍦
 
-> **Operational manager and profitability analysis tool for artisanal creameries.**
+> **Gestor operativo y herramienta de análisis de rentabilidad para heladerías.**
 > 
-> *[Leer en Español](#-español)*
+> *[Read in English](#-english)*
 
-Scoop Ledger is a comprehensive platform designed specifically for artisanal ice cream shops. It allows you to manage ingredient inventory, formulate recipes, accurately calculate profitability, and receive smart alerts about costs.
+Heladería Meriloops es una plataforma integral offline-first diseñada específicamente para heladerías. Permite gestionar el inventario de ingredientes, formular recetas, calcular rentabilidades con precisión y recibir alertas inteligentes sobre costos.
 
 ## 🚀 Key Features
 
@@ -18,9 +18,8 @@ Scoop Ledger is a comprehensive platform designed specifically for artisanal ice
 ## 🛠️ Tech Stack
 
 - **Core**: React 19 + TypeScript + Vite
-- **Styling**: Tailwind CSS 4
+- **Styling**: Vanilla CSS (No Tailwind)
 - **Icons**: Lucide React
-- **Animations**: Motion
 - **AI**: Google GenAI SDK (Gemini Integration)
 
 ## ⚙️ Installation & Setup
@@ -65,9 +64,9 @@ The project is designed with a strict separation of concerns, fundamental for cl
 
 ---
 
-# 🇪🇸 Español
+# 🇪🇸 Español (Acerca de)
 
-Scoop Ledger es una plataforma integral diseñada específicamente para heladerías artesanales. Permite gestionar el inventario de ingredientes, formular recetas, calcular rentabilidades con precisión y recibir alertas inteligentes sobre costos.
+Heladería Meriloops es una plataforma integral diseñada específicamente para heladerías. Permite gestionar el inventario de ingredientes, formular recetas, calcular rentabilidades con precisión y recibir alertas inteligentes sobre costos, todo con un enfoque offline-first.
 
 ## 🚀 Características Principales
 
@@ -81,9 +80,8 @@ Scoop Ledger es una plataforma integral diseñada específicamente para helader�
 ## 🛠️ Tecnologías Utilizadas
 
 - **Core**: React 19 + TypeScript + Vite
-- **Estilos**: Tailwind CSS 4
+- **Estilos**: Vanilla CSS Puro (Sin Tailwind)
 - **Íconos**: Lucide React
-- **Animaciones**: Motion
 - **IA**: Google GenAI SDK (Integración Gemini)
 
 ## ⚙️ Instalación y Configuración
