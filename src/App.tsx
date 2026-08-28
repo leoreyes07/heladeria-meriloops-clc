@@ -35,6 +35,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   const [activeSubTab, setActiveSubTab] = useState<SubTab>('inventory');
+  const [recipeView, setRecipeView] = useState<'builder' | 'list'>('builder');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { t, formatCurrency } = useSettings();
@@ -152,6 +153,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         onOpenNewRecipeModal={() => {
           setActiveTab('recipes');
+          setRecipeView('builder');
         }}
         onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
         isOpen={isMobileMenuOpen}
@@ -206,6 +208,8 @@ export default function App() {
             recipes={recipes}
             onSaveRecipe={handleSaveRecipe}
             onOpenLabelModal={(rec) => setSelectedRecipeForLabel(rec)}
+            activeView={recipeView}
+            onViewChange={setRecipeView}
           />
         )}
 

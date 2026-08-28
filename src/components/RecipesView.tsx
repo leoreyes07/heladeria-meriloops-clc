@@ -15,6 +15,8 @@ interface RecipesViewProps {
   recipes: RecipeItem[];
   onSaveRecipe: (recipe: RecipeItem) => void;
   onOpenLabelModal: (recipe: RecipeItem) => void;
+  activeView: 'builder' | 'list';
+  onViewChange: (view: 'builder' | 'list') => void;
 }
 
 export const RecipesView: React.FC<RecipesViewProps> = ({
@@ -22,8 +24,10 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
   recipes,
   onSaveRecipe,
   onOpenLabelModal,
+  activeView,
+  onViewChange,
 }) => {
-  const [activeView, setActiveView] = useState<'builder' | 'list'>('builder');
+
   const { t, formatCurrency, currency } = useSettings();
 
   // New Recipe Form State
@@ -131,13 +135,13 @@ export const RecipesView: React.FC<RecipesViewProps> = ({
       <div className="view-mode-header">
         <div className="view-mode-tabs">
           <button
-            onClick={() => setActiveView('builder')}
+            onClick={() => onViewChange('builder')}
             className={`view-mode-btn ${activeView === 'builder' ? 'active' : ''}`}
           >
             New Recipe Builder
           </button>
           <button
-            onClick={() => setActiveView('list')}
+            onClick={() => onViewChange('list')}
             className={`view-mode-btn ${activeView === 'list' ? 'active' : ''}`}
           >
             Saved Recipe Catalog ({recipes.length})
