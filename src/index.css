@@ -2,28 +2,28 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-headline: 'Outfit', var(--font-sans);
   
-  /* Color Palette */
-  --color-surface-canvas: #0A0A0C;
-  --color-surface-panel: #141417;
-  --color-surface-sidebar: #0D0D0F;
-  --color-surface-input: #161619;
+  /* Color Palette - Dark Chocolate & Caramel */
+  --color-surface-canvas: #181412;
+  --color-surface-panel: #231c19;
+  --color-surface-sidebar: #1d1714;
+  --color-surface-input: #2a221f;
   
-  --color-border-subtle: rgba(255, 255, 255, 0.05);
-  --color-border-default: rgba(255, 255, 255, 0.1);
-  --color-border-hover: rgba(255, 255, 255, 0.2);
+  --color-border-subtle: rgba(255, 248, 240, 0.05);
+  --color-border-default: rgba(255, 248, 240, 0.1);
+  --color-border-hover: rgba(255, 248, 240, 0.15);
   
-  --color-text-main: #f1f5f9; /* slate-100 */
-  --color-text-muted: #94a3b8; /* slate-400 */
-  --color-text-faint: #64748b; /* slate-500 */
+  --color-text-main: #fff8f0;
+  --color-text-muted: #d6cfc7;
+  --color-text-faint: #a8a098;
   --color-text-bright: #ffffff;
   
-  --color-primary: #818cf8;
-  --color-primary-indigo: #6366f1;
-  --color-emerald-accent: #34d399;
+  --color-primary: #fbbf24;
+  --color-primary-indigo: #f59e0b; /* Re-mapped to Caramel */
+  --color-emerald-accent: #10b981; /* Re-mapped to Pistachio */
   --color-emerald-dark: #059669;
-  --color-rose-alert: #fb7185;
-  --color-amber-alert: #fbbf24;
-  --color-purple-accent: #a855f7;
+  --color-rose-alert: #f43f5e;
+  --color-amber-alert: #d97706;
+  --color-purple-accent: #b45309;
   
   --shadow-card: 0px 10px 30px -10px rgba(0, 0, 0, 0.5);
   --shadow-hover: 0px 15px 35px -10px rgba(0, 0, 0, 0.7);
