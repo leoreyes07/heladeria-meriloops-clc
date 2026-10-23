@@ -2,9 +2,21 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+// CSP plugin: injects Content-Security-Policy and Referrer-Policy meta tags during production build
+const cspPlugin = {
+  name: 'csp-plugin',
+  apply: 'build',
+  transformIndexHtml(html) {
+    return html.replace('</head>', `
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; frame-ancestors 'none';">
+<meta name="referrer" content="no-referrer">
+</head>`);
+  },
+};
+
 export default defineConfig(() => {
   return {
-    plugins: [react()],
+    plugins: [react(), cspPlugin],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
