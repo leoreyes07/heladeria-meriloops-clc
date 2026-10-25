@@ -11,6 +11,7 @@ import {
   Edit2
 } from 'lucide-react';
 import { IngredientItem } from '../types';
+import ingredientsHero from '/ingredients-hero.jpg';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface IngredientsViewProps {
@@ -278,7 +279,7 @@ export const IngredientsView: React.FC<IngredientsViewProps> = ({
       <div className="insights-grid mt-8">
         <div className="image-card group">
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDbKom_Pd4yet4fvpd1ejgj2TwfO_UmEw9F7y-pb1JtgjWt1jwzOhRRX1QSEPKzOLpxbJD7O9jURn6FZ42JxPJJ6kYLX4jDJAfnZMw2nGpvrIDf4XMUOdKzoBJeQWOGLdu8fJu1EkXlBQ7aZZmeilejtKNPaz6MksTKOWq3Zx4-AjxOhZmwKjs-gW6ujFbjJBUTVIP3eWYJGe6r2YVjHLv2Vcn3_N8YVL_G9bVwbK2YZr3MKk2zFO5"
+            src={ingredientsHero}
             alt="Artisanal ice cream ingredients"
             className="image-card-img"
           />

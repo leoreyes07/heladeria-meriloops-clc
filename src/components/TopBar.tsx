@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Bell, CheckCircle2, RefreshCw, Menu } from 'lucide-react';
+import avatarAdmin from '/avatar-admin.svg';
 import { NavigationTab, SubTab } from '../types';
 import { useSettings } from '../contexts/SettingsContext';
 
@@ -134,7 +135,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="topbar-avatar"
         >
           <img
-            src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
+            src={avatarAdmin}
             alt="Operational Manager"
           />
         </div>

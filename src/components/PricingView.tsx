@@ -6,6 +6,7 @@ import {
   Plus
 } from 'lucide-react';
 import { RecipeItem } from '../types';
+import pricingHero from '/pricing-hero.jpg';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface PricingViewProps {
@@ -185,7 +186,7 @@ export const PricingView: React.FC<PricingViewProps> = ({ recipes }) => {
           {/* Current Bestseller Card */}
           <div className="image-card group">
             <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBc4Nw8O1DHkLRVEL8OQWhc6X_xS0Q1IFNYxOy2vqCRPshe22BfVapGe64U7VfUGf7hWeuQHZd8wno7iNMhjw_6d78ka6reW7e-4kMKx9oz7SHaDjTsN7yP8R1-X_6yiuoH6iS3c_-_MtDb2-STpy-IYTRMiiGsJIqVjppQCJe-PHzPQryOeTgmaGbBfvu61Az_9F-k2iXQO2ugl2QoUjSPV6qz2wpyO4hM5_iC8g8ASxbRwNk6K-l"
+              src={pricingHero}
               alt="Vanilla Bean Ice Cream"
               className="image-card-img"
             />

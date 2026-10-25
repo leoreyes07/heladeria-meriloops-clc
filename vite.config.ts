@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, type Plugin} from 'vite';
+import { defineConfig } from 'vite';
 
 // CSP plugin: injects Content-Security-Policy and Referrer-Policy meta tags during production build
 const cspPlugin = {
@@ -14,28 +14,19 @@ const cspPlugin = {
   },
 };
 
-export default defineConfig(() => {
-  return {
-    plugins: [react(), cspPlugin],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, '.'),
-      },
+export default defineConfig({
+  plugins: [react(), cspPlugin],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '.'),
     },
-    server: {
-      // Restrict dev server to localhost for security
-      host: 'localhost',
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-
-      hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
-      watch: process.env.DISABLE_HMR === 'true' ? null : {},
-    },
-
-
-
-
-
-
-  };
+  },
+  server: {
+    // Restrict dev server to localhost for security
+    host: 'localhost',
+    // HMR is disabled in AI Studio via DISABLE_HMR env var.
+    hmr: process.env.DISABLE_HMR !== 'true',
+    // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
+    watch: process.env.DISABLE_HMR === 'true' ? null : {},
+  },
 });
