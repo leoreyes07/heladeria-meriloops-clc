@@ -11,6 +11,7 @@ import { AddIngredientModal } from './components/AddIngredientModal';
 import { RecipeLabelModal } from './components/RecipeLabelModal';
 import { OrdersModal } from './components/OrdersModal';
 import { SettingsModal } from './components/SettingsModal';
+import { isArrayValidator } from './utils/validators';
 
 import { 
   INITIAL_INGREDIENTS, 
@@ -41,11 +42,11 @@ export default function App() {
   const { t, formatCurrency } = useSettings();
 
   // Data Collections State
-  const [ingredients, setIngredients] = useLocalStorage<IngredientItem[]>('meriloops_ingredients', INITIAL_INGREDIENTS);
-  const [recipes, setRecipes] = useLocalStorage<RecipeItem[]>('meriloops_recipes', INITIAL_RECIPES);
-  const [flavors, setFlavors] = useLocalStorage<FlavorProfitability[]>('meriloops_flavors', INITIAL_FLAVORS);
-  const [advisory, setAdvisory] = useLocalStorage<AIAdvisoryAlert>('meriloops_advisory', INITIAL_ADVISORY);
-  const [orders, setOrders] = useLocalStorage<OrderItem[]>('meriloops_orders', INITIAL_ORDERS);
+  const [ingredients, setIngredients] = useLocalStorage<IngredientItem[]>('meriloops_ingredients', INITIAL_INGREDIENTS, isArrayValidator);
+  const [recipes, setRecipes] = useLocalStorage<RecipeItem[]>('meriloops_recipes', INITIAL_RECIPES, isArrayValidator);
+  const [flavors, setFlavors] = useLocalStorage<FlavorProfitability[]>('meriloops_flavors', INITIAL_FLAVORS, isArrayValidator);
+  const [advisory, setAdvisory] = useLocalStorage<AIAdvisoryAlert>('meriloops_advisory', INITIAL_ADVISORY, isArrayValidator);
+  const [orders, setOrders] = useLocalStorage<OrderItem[]>('meriloops_orders', INITIAL_ORDERS, isArrayValidator);
 
   // Sync & UI States
   const [isSyncing, setIsSyncing] = useState(false);
