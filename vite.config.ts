@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import {defineConfig, type Plugin} from 'vite';
 
 // CSP plugin: injects Content-Security-Policy and Referrer-Policy meta tags during production build
 const cspPlugin = {
