@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations, Language, Currency } from '../i18n/translations';
-import safeNumber from '../utils/safeNumber';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { isNumberValidator } from '../utils/validators';
 
 export type Theme = 'dark' | 'light';
 
@@ -35,10 +36,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (saved as Currency) || 'USD';
   });
 
-  const [exchangeRate, setExchangeRate] = useState<number>(() => {
-    const saved = localStorage.getItem('app_exchange_rate');
-    return saved ? safeNumber(parseFloat(saved), { min: 0.1, max: 99 }) : 36.5; // Default roughly to NIO rate
-  });
+  const [exchangeRate, setExchangeRate] = useLocalStorage<number>('app_exchange_rate', 36.5, isNumberValidator);
 
   useEffect(() => {
     localStorage.setItem('app_language', language);
