@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 import { X, Globe, DollarSign } from 'lucide-react';
-import { Language, Currency } from '../i18n/translations';
+import safeNumber from '../utils/safeNumber';
 
 interface SettingsModalProps {
   isOpen: boolean;
